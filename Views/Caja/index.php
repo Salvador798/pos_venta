@@ -4,12 +4,12 @@
 </ol>
 <button class="btn btn-primary mb-2" type="button" onclick="frmCaja();"><i class="fas fa-plus"></i></button>
 <table class="table table-light" id="tblCajas">
-    <thead class="table table-dark text-center">
+    <thead class="table table-dark">
         <tr>
-            <th>Id</th>
-            <th>Caja</th>
-            <th>Estado</th>
-            <th></th>
+            <th class="text-center">Id</th>
+            <th class="text-center">Caja</th>
+            <th class="text-center">Estado</th>
+            <th class="text-center"></th>
         </tr>
     </thead>
     <tbody class="text-center">

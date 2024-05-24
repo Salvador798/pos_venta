@@ -18,13 +18,13 @@ class Medidas extends Controller
         $data = $this->model->getMedidas();
         for ($i = 0; $i < count($data); $i++) {
             if ($data[$i]['estado'] == 1) {
-                $data[$i]['estado'] = '<span class="btn btn-success">Activo</span>';
+                $data[$i]['estado'] = '<span class="badge badge-success">Activo</span>';
                 $data[$i]['acciones'] = '<div>
                 <button class="btn btn-primary" type="button" onclick="btnEditarMed(' . $data[$i]['id'] . ');"><i class="fas fa-edit"></i></button>
                 <button class="btn btn-danger" type="button" onclick=" btnEliminarMed(' . $data[$i]['id'] . ');"><i class="fas fa-trash-alt"></i></button>
                 </div>';
             } else {
-                $data[$i]['estado'] = '<span class="btn btn-danger">Inactivo</span>';
+                $data[$i]['estado'] = '<span class="badge badge-danger">Inactivo</span>';
                 $data[$i]['acciones'] = '<div>
                 <button class="btn btn-success" type="button" onclick=" btnReingresarMed(' . $data[$i]['id'] . ');">Reingresar</button>
                 </div>';
@@ -38,23 +38,23 @@ class Medidas extends Controller
         $nombre = $_POST['nombre'];
         $id = $_POST['id'];
         if (empty($nombre)) {
-            $msg = "El Nombre es obligatorio";
+            $msg = array('msg' => 'El Nombre es obligatorio', 'icono' => 'warning');
         } else {
             if ($id == "") {
                 $data = $this->model->registrarMedidas($nombre);
                 if ($data == "ok") {
-                    $msg = "si";
+                    $msg = array('msg' => 'Medida registrada con éxito', 'icono' => 'success');
                 } else if ($data == "existe") {
-                    $msg = "El dni ya existe";
+                    $msg = array('msg' => 'La medida ya existe', 'icono' => 'warning');
                 } else {
-                    $msg = "Error al registrar la medida";
+                    $msg = array('msg' => 'Error al registrar la Medida', 'icono' => 'error');
                 }
             } else {
                 $data = $this->model->modificarMedidas($nombre, $id);
                 if ($data == "modificado") {
-                    $msg = "modificado";
+                    $msg = array('msg' => 'Medida modificada con éxito', 'icono' => 'success');
                 } else {
-                    $msg = "Error al modificar la medida";
+                    $msg = array('msg' => 'Error al modificar la Medida', 'icono' => 'warning');
                 }
             }
         }
@@ -71,9 +71,9 @@ class Medidas extends Controller
     {
         $data = $this->model->accionMed(0, $id);
         if ($data == 1) {
-            $msg = "ok";
+            $msg = array('msg' => 'Medida desactivada', 'icono' => 'success');
         } else {
-            $msg = "Error al eliminar la categoria";
+            $msg = array('msg' => 'Error al desactivar la Medida', 'icono' => 'error');
         }
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();
@@ -82,9 +82,9 @@ class Medidas extends Controller
     {
         $data = $this->model->accionMed(1, $id);
         if ($data == 1) {
-            $msg = "ok";
+            $msg = array('msg' => 'Medida activada', 'icono' => 'success');
         } else {
-            $msg = "Error al reingresar la medida";
+            $msg = array('msg' => 'Error al activar la Medida', 'icono' => 'error');
         }
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();

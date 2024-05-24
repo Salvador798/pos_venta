@@ -4,7 +4,7 @@
 </ol>
 <button class="btn btn-primary mb-2" type="button" onclick="frmUsuario();"><i class="fas fa-plus"></i></button>
 <table class="table table-light" id="tblUsuarios">
-    <thead class="table table-dark text-center">
+    <thead class="table table-dark">
         <tr>
             <th>Id</th>
             <th>Usuarios</th>
@@ -14,7 +14,7 @@
             <th></th>
         </tr>
     </thead>
-    <tbody class="text-center">
+    <tbody>
     </tbody>
 </table>
 <div id="nuevo_usuario" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="my-modal-title" aria-hidden="true">

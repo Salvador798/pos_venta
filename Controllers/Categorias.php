@@ -18,13 +18,13 @@ class Categorias extends Controller
         $data = $this->model->getCategorias();
         for ($i = 0; $i < count($data); $i++) {
             if ($data[$i]['estado'] == 1) {
-                $data[$i]['estado'] = '<span class="btn btn-success">Activo</span>';
+                $data[$i]['estado'] = '<span class="badge badge-success">Activo</span>';
                 $data[$i]['acciones'] = '<div>
                 <button class="btn btn-primary" type="button" onclick="btnEditarCat(' . $data[$i]['id'] . ');"><i class="fas fa-edit"></i></button>
                 <button class="btn btn-danger" type="button" onclick=" btnEliminarCat(' . $data[$i]['id'] . ');"><i class="fas fa-trash-alt"></i></button>
                 </div>';
             } else {
-                $data[$i]['estado'] = '<span class="btn btn-danger">Inactivo</span>';
+                $data[$i]['estado'] = '<span class="badge badge-danger">Inactivo</span>';
                 $data[$i]['acciones'] = '<div>
                 <button class="btn btn-success" type="button" onclick=" btnReingresarCat(' . $data[$i]['id'] . ');">Reingresar</button>
                 </div>';
@@ -38,23 +38,23 @@ class Categorias extends Controller
         $nombre = $_POST['nombre'];
         $id = $_POST['id'];
         if (empty($nombre)) {
-            $msg = "El Nombre es obligatorio";
+            $msg = array('msg' => 'Todos los campos son obligatorios', 'icono' => 'warning');
         } else {
             if ($id == "") {
                 $data = $this->model->registrarCategorias($nombre);
                 if ($data == "ok") {
-                    $msg = "si";
+                    $msg = array('msg' => 'Categoria registrada con éxito', 'icono' => 'success');
                 } else if ($data == "existe") {
-                    $msg = "El dni ya existe";
+                    $msg = array('msg' => 'La Categoria ya existe', 'icono' => 'warning');
                 } else {
-                    $msg = "Error al registrar el cliente";
+                    $msg = array('msg' => 'Error al registrar la Categoria', 'icono' => 'error');
                 }
             } else {
                 $data = $this->model->modificarCategorias($nombre, $id);
                 if ($data == "modificado") {
-                    $msg = "modificado";
+                    $msg = array('msg' => 'Categoria modificada con éxito', 'icono' => 'success');
                 } else {
-                    $msg = "Error al modificar el cliente";
+                    $msg = array('msg' => 'Error al modificar la Categoria', 'icono' => 'error');
                 }
             }
         }
@@ -71,9 +71,9 @@ class Categorias extends Controller
     {
         $data = $this->model->accionCat(0, $id);
         if ($data == 1) {
-            $msg = "ok";
+            $msg = array('msg' => 'Categoria Desactivada', 'icono' => 'success');
         } else {
-            $msg = "Error al eliminar la categoria";
+            $msg = array('msg' => 'Error al desactivar la Categoria', 'icono' => 'error');
         }
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();
@@ -82,9 +82,9 @@ class Categorias extends Controller
     {
         $data = $this->model->accionCat(1, $id);
         if ($data == 1) {
-            $msg = "ok";
+            $msg = array('msg' => 'Categoria activada', 'icono' => 'success');
         } else {
-            $msg = "Error al reingresar la categoria";
+            $msg = array('msg' => 'Error al activar la Categoria', 'icono' => 'error');
         }
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();

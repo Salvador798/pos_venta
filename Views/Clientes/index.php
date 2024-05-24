@@ -4,15 +4,15 @@
 </ol>
 <button class="btn btn-primary mb-2" type="button" onclick="frmCliente();"><i class="fas fa-plus"></i></button>
 <table class="table table-light" id="tblClientes">
-    <thead class="table table-dark text-center">
+    <thead class="table table-dark">
         <tr>
-            <th>Id</th>
-            <th>Dni</th>
-            <th>Nombre</th>
-            <th>Telefono</th>
-            <th>Dirección</th>
-            <th>Estado</th>
-            <th></th>
+            <th class="text-center">Id</th>
+            <th class="text-center">Dni</th>
+            <th class="text-center">Nombre</th>
+            <th class="text-center">Telefono</th>
+            <th class="text-center">Dirección</th>
+            <th class="text-center">Estado</th>
+            <th class="text-center"></th>
         </tr>
     </thead>
     <tbody class="text-center">

@@ -3,18 +3,20 @@
     <li class="breadcrumb-item active">Medidas</li>
 </ol>
 <button class="btn btn-primary mb-2" type="button" onclick="frmMedida();"><i class="fas fa-plus"></i></button>
-<table class="table table-light" id="tblMedidas">
-    <thead class="table table-dark text-center">
-        <tr>
-            <th>Id</th>
-            <th>Nombre</th>
-            <th>Estado</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody class="text-center">
-    </tbody>
-</table>
+<div class="table-responsive">
+    <table class="table table-light" id="tblMedidas">
+        <thead class="table table-dark text-center">
+            <tr>
+                <th class="text-center">Id</th>
+                <th class="text-center">Nombre</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center"></th>
+            </tr>
+        </thead>
+        <tbody class="text-center">
+        </tbody>
+    </table>
+</div>
 <div id="nueva_medida" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="my-modal-title" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
