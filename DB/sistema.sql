@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost
--- Tiempo de generación: 24-05-2024 a las 03:56:20
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 24-08-2024 a las 20:10:49
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -69,6 +69,31 @@ INSERT INTO `categorias` (`id`, `nombre`, `estado`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `cierre_caja`
+--
+
+CREATE TABLE `cierre_caja` (
+  `id` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `monto_inicial` decimal(10,2) NOT NULL,
+  `monto_final` decimal(10,2) NOT NULL,
+  `fecha_apertura` date NOT NULL,
+  `fecha_cierre` date NOT NULL,
+  `total_ventas` int(11) NOT NULL,
+  `monto_total` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `estado` int(11) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `cierre_caja`
+--
+
+INSERT INTO `cierre_caja` (`id`, `id_usuario`, `monto_inicial`, `monto_final`, `fecha_apertura`, `fecha_cierre`, `total_ventas`, `monto_total`, `estado`) VALUES
+(7, 1, 500.00, 0.00, '2024-08-19', '0000-00-00', 0, 0.00, 1);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `clientes`
 --
 
@@ -100,6 +125,7 @@ INSERT INTO `clientes` (`id`, `dni`, `nombre`, `telefono`, `direccion`, `estado`
 
 CREATE TABLE `compras` (
   `id` int(11) NOT NULL,
+  `id_producto` int(11) NOT NULL,
   `total` decimal(10,2) NOT NULL,
   `fecha` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `estado` int(11) NOT NULL DEFAULT 1
@@ -109,9 +135,13 @@ CREATE TABLE `compras` (
 -- Volcado de datos para la tabla `compras`
 --
 
-INSERT INTO `compras` (`id`, `total`, `fecha`, `estado`) VALUES
-(2, 100.00, '2024-05-20 19:54:09', 0),
-(3, 220.00, '2024-05-22 16:03:46', 1);
+INSERT INTO `compras` (`id`, `id_producto`, `total`, `fecha`, `estado`) VALUES
+(3, 0, 220.00, '2024-08-19 23:49:39', 0),
+(4, 0, 1000.00, '2024-08-19 23:50:32', 0),
+(5, 0, 20.00, '2024-08-19 23:50:45', 0),
+(6, 0, 62.00, '2024-08-19 23:12:39', 1),
+(7, 0, 260.00, '2024-08-19 22:47:07', 1),
+(8, 0, 120.00, '2024-08-19 23:11:46', 1);
 
 -- --------------------------------------------------------
 
@@ -173,7 +203,49 @@ INSERT INTO `detalle_compras` (`id`, `id_compra`, `id_producto`, `cantidad`, `pr
 (1, 1, 4, 20, 2.00, 40.00),
 (2, 2, 4, 50, 2.00, 100.00),
 (3, 3, 4, 60, 2.00, 120.00),
-(4, 3, 2, 50, 2.00, 100.00);
+(4, 3, 2, 50, 2.00, 100.00),
+(5, 4, 7, 500, 2.00, 1000.00),
+(6, 5, 7, 10, 2.00, 20.00),
+(7, 6, 7, 11, 2.00, 22.00),
+(8, 6, 5, 10, 2.00, 20.00),
+(9, 6, 6, 10, 2.00, 20.00),
+(10, 7, 7, 60, 2.00, 120.00),
+(11, 7, 6, 20, 2.00, 40.00),
+(12, 7, 5, 50, 2.00, 100.00),
+(13, 8, 5, 10, 2.00, 20.00),
+(14, 8, 6, 50, 2.00, 100.00);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `detalle_permisos`
+--
+
+CREATE TABLE `detalle_permisos` (
+  `id` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `id_permiso` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `detalle_permisos`
+--
+
+INSERT INTO `detalle_permisos` (`id`, `id_usuario`, `id_permiso`) VALUES
+(68, 7, 1),
+(69, 7, 2),
+(70, 7, 3),
+(71, 7, 4),
+(72, 7, 5),
+(73, 7, 6),
+(74, 7, 7),
+(75, 7, 8),
+(76, 7, 9),
+(77, 7, 10),
+(78, 7, 11),
+(79, 7, 12),
+(81, 9, 11),
+(91, 8, 5);
 
 -- --------------------------------------------------------
 
@@ -190,6 +262,13 @@ CREATE TABLE `detalle_temp` (
   `descuento` decimal(10,2) NOT NULL DEFAULT 0.00,
   `sub_total` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `detalle_temp`
+--
+
+INSERT INTO `detalle_temp` (`id`, `id_producto`, `id_usuario`, `precio`, `cantidad`, `descuento`, `sub_total`) VALUES
+(26, 5, 1, 2.00, 50, 0.00, 100.00);
 
 -- --------------------------------------------------------
 
@@ -220,7 +299,11 @@ INSERT INTO `detalle_venta` (`id`, `id_venta`, `id_producto`, `cantidad`, `descu
 (6, 12, 4, 25, 0.00, 2.00, 50.00),
 (7, 13, 4, 20, 10.00, 2.00, 40.00),
 (8, 14, 4, 10, 5.00, 2.00, 15.00),
-(9, 15, 4, 15, 0.00, 2.00, 30.00);
+(9, 15, 4, 15, 0.00, 2.00, 30.00),
+(10, 16, 4, 10, 0.00, 2.00, 20.00),
+(11, 17, 4, 20, 0.00, 2.00, 40.00),
+(12, 18, 7, 20, 0.00, 2.00, 40.00),
+(13, 19, 5, 5, 0.00, 2.00, 10.00);
 
 -- --------------------------------------------------------
 
@@ -250,6 +333,37 @@ INSERT INTO `medidas` (`id`, `nombre`, `estado`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `permisos`
+--
+
+CREATE TABLE `permisos` (
+  `id` int(11) NOT NULL,
+  `permiso` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `permisos`
+--
+
+INSERT INTO `permisos` (`id`, `permiso`) VALUES
+(1, 'usuarios'),
+(2, 'configuracion'),
+(3, 'caja'),
+(4, 'arqueo_caja'),
+(5, 'clientes'),
+(6, 'medidas'),
+(7, 'categorias'),
+(8, 'productos'),
+(9, 'nueva_compra'),
+(10, 'historial_compra'),
+(11, 'nueva_venta'),
+(12, 'historial_venta'),
+(13, 'eliminar_clientes'),
+(14, 'registrar_clientes');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `productos`
 --
 
@@ -271,10 +385,11 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`id`, `codigo`, `descripcion`, `precio_compra`, `precio_venta`, `cantidad`, `foto`, `id_medida`, `id_categoria`, `estado`) VALUES
-(2, 'J-32594', 'Jugo', 2.00, 2.00, 73, 'default.png', 5, 4, 1),
-(4, 'J-464576', 'Cocacola', 2.00, 2.00, 60, 'Cocacola.jpg', 5, 4, 1),
-(5, 'J-67403', 'San Salvador', 2.00, 2.00, 11, 'SanSalvador.jpg', 1, 1, 1),
-(6, 'J-241028', 'Zulia', 2.00, 2.00, 20, 'zulia.jpg', 1, 1, 1);
+(2, 'J-32594', 'Jugo', 2.00, 2.00, 23, 'default.png', 5, 4, 1),
+(4, 'J-464576', 'Cocacola', 2.00, 2.00, -30, 'Cocacola.jpg', 5, 4, 1),
+(5, '02', 'San Salvador', 2.00, 2.00, 76, 'SanSalvador.jpg', 1, 1, 1),
+(6, '03', 'Zulia', 2.00, 2.00, 100, 'zulia.jpg', 1, 1, 1),
+(7, '01', 'Refresco', 2.00, 2.00, 51, 'default.png', 5, 4, 1);
 
 -- --------------------------------------------------------
 
@@ -296,8 +411,8 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `usuario`, `nombre`, `clave`, `id_caja`, `estado`) VALUES
-(7, 'admin', 'admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 1, 1),
-(8, 'Salvador', 'Cruz', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 1, 1),
+(1, 'admin', 'admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 1, 1),
+(8, 'salvador', 'Cruz', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 1, 1),
 (9, 'Ana', 'Ana', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 1, 1);
 
 -- --------------------------------------------------------
@@ -308,22 +423,30 @@ INSERT INTO `usuarios` (`id`, `usuario`, `nombre`, `clave`, `id_caja`, `estado`)
 
 CREATE TABLE `ventas` (
   `id` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
   `id_cliente` int(11) NOT NULL,
+  `id_producto` int(11) NOT NULL,
   `total` decimal(10,2) NOT NULL,
-  `fecha` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `fecha` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `estado` int(11) NOT NULL DEFAULT 1,
+  `apertura` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `ventas`
 --
 
-INSERT INTO `ventas` (`id`, `id_cliente`, `total`, `fecha`) VALUES
-(10, 1, 20.00, '2024-05-19 18:00:28'),
-(11, 1, 100.00, '2024-05-19 21:15:14'),
-(12, 1, 50.00, '2024-05-20 12:55:41'),
-(13, 1, 30.00, '2024-05-20 18:18:10'),
-(14, 1, 15.00, '2024-05-20 18:36:55'),
-(15, 3, 30.00, '2024-05-22 16:04:57');
+INSERT INTO `ventas` (`id`, `id_usuario`, `id_cliente`, `id_producto`, `total`, `fecha`, `estado`, `apertura`) VALUES
+(10, 7, 1, 0, 20.00, '2024-08-19 23:52:05', 1, 0),
+(11, 7, 1, 0, 100.00, '2024-08-19 23:52:34', 0, 0),
+(12, 7, 1, 0, 50.00, '2024-08-19 23:52:11', 1, 0),
+(13, 0, 1, 0, 30.00, '2024-08-19 23:52:16', 1, 1),
+(14, 0, 1, 0, 15.00, '2024-08-13 22:59:46', 1, 1),
+(15, 0, 3, 0, 30.00, '2024-08-13 22:59:49', 1, 1),
+(16, 7, 1, 0, 20.00, '2024-08-15 00:51:32', 1, 0),
+(17, 7, 1, 0, 40.00, '2024-08-15 01:00:55', 1, 0),
+(18, 1, 1, 0, 40.00, '2024-08-18 19:24:46', 1, 1),
+(19, 1, 1, 0, 10.00, '2024-08-18 22:55:21', 1, 1);
 
 --
 -- Índices para tablas volcadas
@@ -342,6 +465,12 @@ ALTER TABLE `categorias`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `cierre_caja`
+--
+ALTER TABLE `cierre_caja`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `clientes`
 --
 ALTER TABLE `clientes`
@@ -351,7 +480,8 @@ ALTER TABLE `clientes`
 -- Indices de la tabla `compras`
 --
 ALTER TABLE `compras`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_producto` (`id_producto`);
 
 --
 -- Indices de la tabla `configuracion`
@@ -372,6 +502,12 @@ ALTER TABLE `detalle_compras`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `detalle_permisos`
+--
+ALTER TABLE `detalle_permisos`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `detalle_temp`
 --
 ALTER TABLE `detalle_temp`
@@ -387,6 +523,12 @@ ALTER TABLE `detalle_venta`
 -- Indices de la tabla `medidas`
 --
 ALTER TABLE `medidas`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `permisos`
+--
+ALTER TABLE `permisos`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -425,6 +567,12 @@ ALTER TABLE `categorias`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT de la tabla `cierre_caja`
+--
+ALTER TABLE `cierre_caja`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
@@ -434,7 +582,7 @@ ALTER TABLE `clientes`
 -- AUTO_INCREMENT de la tabla `compras`
 --
 ALTER TABLE `compras`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `configuracion`
@@ -446,25 +594,31 @@ ALTER TABLE `configuracion`
 -- AUTO_INCREMENT de la tabla `detalle`
 --
 ALTER TABLE `detalle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_compras`
 --
 ALTER TABLE `detalle_compras`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT de la tabla `detalle_permisos`
+--
+ALTER TABLE `detalle_permisos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_temp`
 --
 ALTER TABLE `detalle_temp`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `medidas`
@@ -473,10 +627,16 @@ ALTER TABLE `medidas`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
+-- AUTO_INCREMENT de la tabla `permisos`
+--
+ALTER TABLE `permisos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
@@ -488,7 +648,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- Restricciones para tablas volcadas
