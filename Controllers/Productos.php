@@ -4,16 +4,22 @@ class Productos extends Controller
     public function __construct()
     {
         session_start();
+        if (empty($_SESSION['activo'])) {
+            header("location: " . APP_URL);
+        }
         parent::__construct();
     }
     public function index()
     {
-        if (empty($_SESSION['activo'])) {
-            header("location: " . APP_URL);
+        $id_user = $_SESSION['id_usuario'];
+        $verificar = $this->model->verificarPermiso($id_user, 'productos');
+        if (!empty($verificar) || $id_user == 1) {
+            $data['medidas'] = $this->model->getMedidas();
+            $data['categorias'] = $this->model->getCategorias();
+            $this->views->getView($this, "index", $data);
+        } else {
+            header('location: ' . APP_URL . 'errors/permisos');
         }
-        $data['medidas'] = $this->model->getMedidas();
-        $data['categorias'] = $this->model->getCategorias();
-        $this->views->getView($this, "index", $data);
     }
     public function listar()
     {

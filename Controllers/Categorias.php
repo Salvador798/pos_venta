@@ -11,7 +11,13 @@ class Categorias extends Controller
     }
     public function index()
     {
-        $this->views->getView($this, "index");
+        $id_user = $_SESSION['id_usuario'];
+        $verificar = $this->model->verificarPermiso($id_user, 'categorias');
+        if (!empty($verificar) || $id_user == 1) {
+            $this->views->getView($this, "index");
+        } else {
+            header('location: ' . APP_URL . 'errors/permisos');
+        }
     }
     public function listar()
     {

@@ -169,10 +169,10 @@ class ComprasModel extends Query
         $data = $this->save($sql, $datos);
         return $data;
     }
-    public function registrarVenta(int $id_cliente, string $total)
+    public function registrarVenta(int $id_usuario, int $id_cliente, string $total)
     {
-        $sql = "INSERT INTO ventas (id_cliente, total) VALUES (?, ?)";
-        $datos = array($id_cliente, $total);
+        $sql = "INSERT INTO ventas (id_usuario, id_cliente, total) VALUES (?,?,?)";
+        $datos = array($id_usuario, $id_cliente, $total);
         $data = $this->save($sql, $datos);
         if ($data == 1) {
             $res = "ok";
@@ -228,5 +228,33 @@ class ComprasModel extends Query
             $res = "error";
         }
         return $res;
+    }
+
+    public function verificarCaja(int $id)
+    {
+        $sql = "SELECT * FROM cierre_caja WHERE id_usuario = $id AND estado = 1";
+        $data = $this->select($sql);
+        return $data;
+    }
+
+    public function getRangoFechas(string $desde, string $hasta)
+    {
+        $sql = "SELECT c.id, c.nombre, v.* FROM clientes c INNER JOIN ventas v ON v.id_cliente = c.id WHERE v.fecha BETWEEN '$desde' AND '$hasta'";
+        $data = $this->selectAll($sql);
+        return $data;
+    }
+
+    public function getRangoFechasCompra(string $desde, string $hasta)
+    {
+        $sql = "SELECT p.id, p.descripcion, c.* FROM productos p INNER JOIN compras c ON c.id_producto = p.descripcion WHERE c.fecha BETWEEN '$desde' AND '$hasta'";
+        $data = $this->selectAll($sql);
+        return $data;
+    }
+
+    public function verificarPermiso(int $id_user, string $nombre)
+    {
+        $sql = "SELECT p.id, p.permiso, d.id, d.id_usuario, d.id_permiso FROM permisos p INNER JOIN detalle_permisos d on p.id = d.id_permiso WHERE d.id_usuario = $id_user AND p.permiso = '$nombre'";
+        $data = $this->selectAll($sql);
+        return $data;
     }
 }

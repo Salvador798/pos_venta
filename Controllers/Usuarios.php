@@ -4,15 +4,21 @@ class Usuarios extends Controller
     public function __construct()
     {
         session_start();
+        if (empty($_SESSION['activo'])) {
+            header("location: " . APP_URL);
+        }
         parent::__construct();
     }
     public function index()
     {
-        if (empty($_SESSION['activo'])) {
-            header("location: " . APP_URL);
+        $id_user = $_SESSION['id_usuario'];
+        $verificar = $this->model->verificarPermiso($id_user, 'configuracion');
+        if (!empty($verificar) || $id_user == 1) {
+            $data['cajas'] = $this->model->getCajas();
+            $this->views->getView($this, "index", $data);
+        } else {
+            header('location: ' . APP_URL . 'errors/permisos');
         }
-        $data['cajas'] = $this->model->getCajas();
-        $this->views->getView($this, "index", $data);
     }
     public function listar()
     {
@@ -20,10 +26,17 @@ class Usuarios extends Controller
         for ($i = 0; $i < count($data); $i++) {
             if ($data[$i]['estado'] == 1) {
                 $data[$i]['estado'] = '<span class="badge badge-success">Activo</span>';
-                $data[$i]['acciones'] = '<div>
-                <button class="btn btn-primary" type="button" onclick="btnEditarUser(' . $data[$i]['id'] . ');"><i class="fas fa-edit"></i></button>
-                <button class="btn btn-danger" type="button" onclick=" btnEliminarUser(' . $data[$i]['id'] . ');"><i class="fas fa-trash-alt"></i></button>
-                </div>';
+                if ($data[$i]['id'] == 1) {
+                    $data[$i]['acciones'] = '<div>
+                    <span class="badge badge-primary">Administrador</span>
+                    </div>';
+                } else {
+                    $data[$i]['acciones'] = '<div>
+                    <a class="btn btn-dark" href="' . APP_URL . 'Usuarios/permisos/' . $data[$i]['id'] . '"><i class="fas fa-key"></i></a>
+                    <button class="btn btn-primary" type="button" onclick="btnEditarUser(' . $data[$i]['id'] . ');"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-danger" type="button" onclick=" btnEliminarUser(' . $data[$i]['id'] . ');"><i class="fas fa-trash-alt"></i></button>
+                    </div>';
+                }
             } else {
                 $data[$i]['estado'] = '<span class="badge badge-danger">Inactivo</span>';
                 $data[$i]['acciones'] = '<div>
@@ -153,6 +166,42 @@ class Usuarios extends Controller
         echo json_encode($mensaje, JSON_UNESCAPED_UNICODE);
         die();
     }
+
+    public function permisos($id)
+    {
+        if (empty($_SESSION['activo'])) {
+            header("location: " . APP_URL);
+        }
+        $data['datos'] = $this->model->getPermisos();
+        $permisos = $this->model->getDetallePermisos($id);
+        $data['asignados'] = array();
+        foreach ($permisos as $permiso) {
+            $data['asignados'][$permiso['id_permiso']] = true;
+        }
+        $data['id_usuario'] = $id;
+        $this->views->getView($this, "permisos", $data);
+    }
+
+    public function registrarPermiso()
+    {
+        $msg = '';
+        $id_user = $_POST['id_usuario'];
+        $eliminar = $this->model->eliminarPermisos($id_user);
+        if ($eliminar == 'ok') {
+            foreach ($_POST['permisos'] as $id_permiso) {
+                $msg = $this->model->registrarPermisos($id_user, $id_permiso);
+            }
+            if ($msg == 'ok') {
+                $msg = array('msg' => 'Permiso asignado', 'icono' => 'success');
+            } else {
+                $msg = array('msg' => 'Error al asignar los permisos', 'icono' => 'error');
+            }
+        } else {
+            $msg = array('msg' => 'Error al eliminar los permisos anteriores', 'icono' => 'error');
+        }
+        echo json_encode($msg, JSON_UNESCAPED_UNICODE);
+    }
+
     public function salir()
     {
         session_destroy();

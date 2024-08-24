@@ -84,4 +84,11 @@ class ProductosModel extends Query
         $data = $this->save($sql, $datos);
         return $data;
     }
+
+    public function verificarPermiso(int $id_user, string $nombre)
+    {
+        $sql = "SELECT p.id, p.permiso, d.id, d.id_usuario, d.id_permiso FROM permisos p INNER JOIN detalle_permisos d on p.id = d.id_permiso WHERE d.id_usuario = $id_user AND p.permiso = '$nombre'";
+        $data = $this->selectAll($sql);
+        return $data;
+    }
 }

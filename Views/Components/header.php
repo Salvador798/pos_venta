@@ -9,6 +9,7 @@
     <meta name="author" content="" />
     <title>Dashboard</title>
     <link href="<?php echo APP_URL; ?>Assets/css/styles.css" rel="stylesheet" />
+    <link href="<?php echo APP_URL ?>Assets/css/estilos.css" rel="stylesheet" />
     <link href="<?php echo APP_URL; ?>Assets/DataTables/datatables.min.css" rel="stylesheet" />
     <link href="<?php echo APP_URL; ?>Assets/css/select2.min.css" rel="stylesheet" />
     <script src="<?php echo APP_URL; ?>Assets/js/all.js" crossorigin="anonymous"></script>

@@ -8,16 +8,34 @@ class Compras extends Controller
     }
     public function index()
     {
-        $this->views->getView($this, "index");
+        $id_user = $_SESSION['id_usuario'];
+        $verificar = $this->model->verificarPermiso($id_user, 'nueva_compra');
+        if (!empty($verificar) || $id_user == 1) {
+            $this->views->getView($this, "index");
+        } else {
+            header('location: ' . APP_URL . 'errors/permisos');
+        }
     }
     public function ventas()
     {
-        $data = $this->model->getClientes();
-        $this->views->getView($this, "ventas", $data);
+        $id_user = $_SESSION['id_usuario'];
+        $verificar = $this->model->verificarPermiso($id_user, 'nueva_venta');
+        if (!empty($verificar) || $id_user == 1) {
+            $data = $this->model->getClientes();
+            $this->views->getView($this, "ventas", $data);
+        } else {
+            header('location: ' . APP_URL . 'errors/permisos');
+        }
     }
     public function historial_ventas()
     {
-        $this->views->getView($this, "historial_ventas");
+        $id_user = $_SESSION['id_usuario'];
+        $verificar = $this->model->verificarPermiso($id_user, 'historial_venta');
+        if (!empty($verificar) || $id_user == 1) {
+            $this->views->getView($this, "historial_ventas");
+        } else {
+            header('location: ' . APP_URL . 'errors/permisos');
+        }
     }
 
     public function buscarCodigo($cod)
@@ -66,21 +84,29 @@ class Compras extends Controller
         $cantidad = $_POST['cantidad'];
         $comprobar = $this->model->consultarDetalle('detalle_temp', $id_producto, $id_usuario);
         if (empty($comprobar)) {
-            $sub_total = $precio * $cantidad;
-            $data = $this->model->registrarDetalle('detalle_temp', $id_producto, $id_usuario, $precio, $cantidad, $sub_total);
-            if ($data == "ok") {
-                $msg = array('msg' => 'Producto ingresado a la venta', 'icono' => 'success');
+            if ($datos['cantidad'] >= $cantidad) {
+                $sub_total = $precio * $cantidad;
+                $data = $this->model->registrarDetalle('detalle_temp', $id_producto, $id_usuario, $precio, $cantidad, $sub_total);
+                if ($data == "ok") {
+                    $msg = array('msg' => 'Producto ingresado a la venta', 'icono' => 'success');
+                } else {
+                    $msg = array('msg' => 'Error al ingresar el producto a la venta', 'icono' => 'error');
+                }
             } else {
-                $msg = array('msg' => 'Error al ingresar el producto a la venta', 'icono' => 'error');
+                $msg = array('msg' => 'Stock disponible hay ' . $datos['cantidad'], 'icono' => 'warning');
             }
         } else {
             $total_cantidad = $comprobar['cantidad'] + $cantidad;
             $sub_total = $total_cantidad * $precio;
-            $data = $this->model->actualizarDetalle('detalle_temp', $precio, $total_cantidad, $sub_total, $id_producto, $id_usuario,);
-            if ($data == "modificado") {
-                $msg = array('msg' => 'Producto actualizado', 'icono' => 'success');
+            if ($datos['cantidad'] < $total_cantidad) {
+                $msg = array('msg' => 'Stock no disponible', 'icono' => 'warning');
             } else {
-                $msg = array('msg' => 'Error al actualizar el producto a la compra', 'icono' => 'error');
+                $data = $this->model->actualizarDetalle('detalle_temp', $precio, $total_cantidad, $sub_total, $id_producto, $id_usuario,);
+                if ($data == "modificado") {
+                    $msg = array('msg' => 'Producto actualizado', 'icono' => 'success');
+                } else {
+                    $msg = array('msg' => 'Error al actualizar el producto a la compra', 'icono' => 'error');
+                }
             }
         }
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
@@ -147,28 +173,33 @@ class Compras extends Controller
     public function registrarVenta($id_cliente)
     {
         $id_usuario = $_SESSION['id_usuario'];
-        $total = $this->model->calcularCompra('detalle_temp', $id_usuario);
-        $data = $this->model->registrarVenta($id_cliente, $total['total']);
-        if ($data == 'ok') {
-            $detalle = $this->model->getDetalle('detalle_temp', $id_usuario);
-            $id_venta = $this->model->getId('ventas');
-            foreach ($detalle as $row) {
-                $cantidad = $row['cantidad'];
-                $desc = $row['descuento'];
-                $precio = $row['precio'];
-                $id_pro = $row['id_producto'];
-                $sub_total = ($cantidad * $precio) - $desc;
-                $this->model->registrarDetalleVenta($id_venta['id'], $id_pro, $cantidad, $desc, $precio, $sub_total);
-                $stock_actual = $this->model->getProductos($id_pro);
-                $stock = $stock_actual['cantidad'] - $cantidad;
-                $this->model->actualizarStock($stock, $id_pro);
-            }
-            $vaciar = $this->model->vaciarDetalle('detalle_temp', $id_usuario);
-            if ($vaciar == 'ok') {
-                $msg = array('msg' => 'ok', 'id_venta' => $id_venta['id']);
-            }
+        $verificar = $this->model->verificarCaja($id_usuario);
+        if (empty($verificar)) {
+            $msg = array('msg' => 'La caja está cerrada', 'icono' => 'warning');
         } else {
-            $msg = array('msg' => 'Error al realizar la venta', 'icono' => 'error');
+            $total = $this->model->calcularCompra('detalle_temp', $id_usuario);
+            $data = $this->model->registrarVenta($id_usuario, $id_cliente, $total['total']);
+            if ($data == 'ok') {
+                $detalle = $this->model->getDetalle('detalle_temp', $id_usuario);
+                $id_venta = $this->model->getId('ventas');
+                foreach ($detalle as $row) {
+                    $cantidad = $row['cantidad'];
+                    $desc = $row['descuento'];
+                    $precio = $row['precio'];
+                    $id_pro = $row['id_producto'];
+                    $sub_total = ($cantidad * $precio) - $desc;
+                    $this->model->registrarDetalleVenta($id_venta['id'], $id_pro, $cantidad, $desc, $precio, $sub_total);
+                    $stock_actual = $this->model->getProductos($id_pro);
+                    $stock = $stock_actual['cantidad'] - $cantidad;
+                    $this->model->actualizarStock($stock, $id_pro);
+                }
+                $vaciar = $this->model->vaciarDetalle('detalle_temp', $id_usuario);
+                if ($vaciar == 'ok') {
+                    $msg = array('msg' => 'ok', 'id_venta' => $id_venta['id']);
+                }
+            } else {
+                $msg = array('msg' => 'Error al realizar la venta', 'icono' => 'error');
+            }
         }
         echo json_encode($msg);
         die();
@@ -235,7 +266,13 @@ class Compras extends Controller
     }
     public function historial()
     {
-        $this->views->getView($this, "historial");
+        $id_user = $_SESSION['id_usuario'];
+        $verificar = $this->model->verificarPermiso($id_user, 'historial_compra');
+        if (!empty($verificar) || $id_user == 1) {
+            $this->views->getView($this, "historial");
+        } else {
+            header('location: ' . APP_URL . 'errors/permisos');
+        }
     }
     public function listar_historial()
     {
@@ -383,5 +420,75 @@ class Compras extends Controller
         }
         echo json_encode($msg);
         die();
+    }
+
+    public function pdf()
+    {
+
+        $desde = $_POST['desde'];
+        $hasta = $_POST['hasta'];
+        if (empty($desde) || empty($hasta)) {
+            $data = $this->model->getHistorialVentas();
+        } else {
+            $data = $this->model->getRangoFechas($desde, $hasta);
+        }
+        require('Libraries/fpdf/fpdf.php');
+
+        $pdf = new FPDF('P', 'mm', 'A4');
+        $pdf->AddPage();
+        $pdf->SetMargins(5, 0, 0);
+        $pdf->SetTitle('Reporte Ventas');
+        $pdf->SetFont('Arial', 'B', 12);
+        $pdf->SetFillColor(0, 0, 0);
+        $pdf->SetTextColor(255, 255, 255);
+        $pdf->Cell(20, 5, 'Id', 0, 0, 'C', true);
+        $pdf->Cell(55, 5, 'Cliente', 0, 0, 'C', true);
+        $pdf->Cell(50, 5, 'Fecha y Hora', 0, 0, 'C', true);
+        $pdf->Cell(55, 5, 'Total', 0, 1, 'C', true);
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->SetTextColor(0, 0, 0);
+        foreach ($data as $row) {
+            $pdf->Cell(30, 5, $row['id'], 0, 0, 'C');
+            $pdf->Cell(45, 5, utf8_decode($row['nombre']), 0, 0, 'C');
+            $pdf->Cell(60, 5, $row['fecha'], 0, 0, 'C');
+            $pdf->Cell(45, 5, $row['total'], 0, 1, 'C');
+        }
+
+        $pdf->Output();
+    }
+
+    public function pdfCompra()
+    {
+
+        $desde = $_POST['desde'];
+        $hasta = $_POST['hasta'];
+        if (empty($desde) || empty($hasta)) {
+            $data = $this->model->getHistorialCompras();
+        } else {
+            $data = $this->model->getRangoFechasCompra($desde, $hasta);
+        }
+        require('Libraries/fpdf/fpdf.php');
+
+        $pdf = new FPDF('P', 'mm', 'A4');
+        $pdf->AddPage();
+        $pdf->SetMargins(5, 0, 0);
+        $pdf->SetTitle('Reporte Compra');
+        $pdf->SetFont('Arial', 'B', 12);
+        $pdf->SetFillColor(0, 0, 0);
+        $pdf->SetTextColor(255, 255, 255);
+        $pdf->Cell(20, 5, 'Id', 0, 0, 'C', true);
+        $pdf->Cell(55, 5, 'Productos', 0, 0, 'C', true);
+        $pdf->Cell(50, 5, 'Fecha y Hora', 0, 0, 'C', true);
+        $pdf->Cell(55, 5, 'Total', 0, 1, 'C', true);
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->SetTextColor(0, 0, 0);
+        foreach ($data as $row) {
+            $pdf->Cell(30, 5, $row['id'], 0, 0, 'C');
+            $pdf->Cell(45, 5, utf8_decode($row['descripcion']), 0, 0, 'C');
+            $pdf->Cell(60, 5, $row['fecha'], 0, 0, 'C');
+            $pdf->Cell(45, 5, $row['total'], 0, 1, 'C');
+        }
+
+        $pdf->Output();
     }
 }

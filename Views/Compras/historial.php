@@ -1,5 +1,27 @@
 <?php include "Views/Components/header.php"; ?>
-<div class="card">
+<br>
+<form action="<?php echo APP_URL; ?>Compras/pdfCompra" method="POST" target="_blank">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="mb-3">
+                <label for="min">Desde</label>
+                <input type="date" value="<?php echo date('Y-m-d'); ?>" name="desde" id="min">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="mb-3">
+                <label for="hasta">hasta</label>
+                <input type="date" value="<?php echo date('Y-m-d'); ?>" name="hasta" id="hasta">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <button type="submit" class="btn btn-danger">PDF</button>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="card my-2">
     <div class="card-header text-white sub_title">
         Compras
     </div>
