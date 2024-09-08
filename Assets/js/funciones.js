@@ -618,7 +618,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Fin tabla medida
 
   // Historial ventas
-  $("#t_historial_v").DataTable({
+  t_h_v = $("#t_historial_v").DataTable({
     ajax: {
       url: APP_URL + "Compras/listar_historial_venta",
       dataSrc: "",
@@ -1928,6 +1928,34 @@ function btnAnularC(id) {
           const res = JSON.parse(this.responseText);
           alertas(res.msg, res.icono);
           t_h_c.ajax.reload();
+        }
+      };
+    }
+  });
+}
+
+// Anular Venta
+// Generar Venta
+function btnAnularV(id) {
+  Swal.fire({
+    title: "¿Está seguro de anular la Venta?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Si",
+    cancelButtonText: "No",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const url = APP_URL + "Compras/anularVenta/" + id;
+      const http = new XMLHttpRequest();
+      http.open("GET", url, true);
+      http.send();
+      http.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          const res = JSON.parse(this.responseText);
+          alertas(res.msg, res.icono);
+          t_h_v.ajax.reload();
         }
       };
     }

@@ -298,9 +298,18 @@ class Compras extends Controller
     {
         $data = $this->model->getHistorialVentas();
         for ($i = 0; $i < count($data); $i++) {
-            $data[$i]['acciones'] = '<div>
+            if ($data[$i]['estado'] == 1) {
+                $data[$i]['estado'] = '<span class="badge badge-success">Completado</span>';
+                $data[$i]['acciones'] = '<div>
+                <button class="btn btn-warning" onclick="btnAnularV(' . $data[$i]['id'] . ')"><i class="fas fa-ban"></i></button>
                 <a class="btn btn-danger" href="' . APP_URL . "Compras/generarPdfVenta/" . $data[$i]['id'] . '" target="_blank"><i class="fas fa-file-pdf"></i></a>
                 </div>';
+            } else {
+                $data[$i]['estado'] = '<span class="badge badge-danger">Anulado</span>';
+                $data[$i]['acciones'] = '<div>
+                <a class="btn btn-danger" href="' . APP_URL . "Compras/generarPdfVenta/" . $data[$i]['id'] . '" target="_blank"><i class="fas fa-file-pdf"></i></a>
+                </div>';
+            }
         }
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die();
@@ -422,6 +431,24 @@ class Compras extends Controller
         die();
     }
 
+    public function anularVenta($id_venta)
+    {
+        $data = $this->model->getAnularVenta($id_venta);
+        $anular = $this->model->getAnularV($id_venta);
+        foreach ($data as $row) {
+            $stock_actual = $this->model->getProductos($row['id_producto']);
+            $stock = $stock_actual['cantidad'] + $row['cantidad'];
+            $this->model->actualizarStock($stock, $row['id_producto']);
+        }
+        if ($anular == 'ok') {
+            $msg = array('msg' => 'Venta Anulada', 'icono' => 'success');
+        } else {
+            $msg = array('msg' => 'Error al Anular', 'icono' => 'error');
+        }
+        echo json_encode($msg);
+        die();
+    }
+
     public function pdf()
     {
 
@@ -442,16 +469,36 @@ class Compras extends Controller
         $pdf->SetFillColor(0, 0, 0);
         $pdf->SetTextColor(255, 255, 255);
         $pdf->Cell(20, 5, 'Id', 0, 0, 'C', true);
-        $pdf->Cell(55, 5, 'Cliente', 0, 0, 'C', true);
-        $pdf->Cell(50, 5, 'Fecha y Hora', 0, 0, 'C', true);
-        $pdf->Cell(55, 5, 'Total', 0, 1, 'C', true);
+        $pdf->Cell(40, 5, 'Cliente', 0, 0, 'C', true);
+        $pdf->Cell(40, 5, 'Producto', 0, 0, 'C', true);
+        $pdf->Cell(40, 5, 'Fecha y Hora', 0, 0, 'C', true);
+        $pdf->Cell(35, 5, 'Total', 0, 1, 'C', true);
+
         $pdf->SetFont('Arial', '', 10);
         $pdf->SetTextColor(0, 0, 0);
+
+        $clienteActual = '';
+        $totalCliente = 0;
+
         foreach ($data as $row) {
+            if ($row['nombre'] != $clienteActual) {
+                if ($clienteActual != '') {
+                    $pdf->Cell(175, 10, 'El total: $' . $totalCliente, 0, 1, 'R');
+                    $pdf->Ln(5);
+                }
+                $clienteActual = $row['nombre'];
+                $totalCliente = 0;
+                $pdf->Cell(90, 5, utf8_decode($clienteActual), 0, 1, 'C');
+            }
             $pdf->Cell(30, 5, $row['id'], 0, 0, 'C');
-            $pdf->Cell(45, 5, utf8_decode($row['nombre']), 0, 0, 'C');
-            $pdf->Cell(60, 5, $row['fecha'], 0, 0, 'C');
-            $pdf->Cell(45, 5, $row['total'], 0, 1, 'C');
+            $pdf->Cell(110, 5, utf8_decode($row['descripcion']), 0, 0, 'C');
+            $pdf->Cell(2, 5, $row['fecha'], 0, 0, 'R');
+            $pdf->Cell(27, 5, '$' . $row['total'], 0, 1, 'R');
+            $totalCliente += $row['total'];
+        }
+
+        if ($clienteActual != '') {
+            $pdf->Cell(175, 10, 'El Total: $' . $totalCliente, 0, 1, 'R');
         }
 
         $pdf->Output();
@@ -482,6 +529,7 @@ class Compras extends Controller
         $pdf->Cell(55, 5, 'Total', 0, 1, 'C', true);
         $pdf->SetFont('Arial', '', 10);
         $pdf->SetTextColor(0, 0, 0);
+
         foreach ($data as $row) {
             $pdf->Cell(30, 5, $row['id'], 0, 0, 'C');
             $pdf->Cell(45, 5, utf8_decode($row['descripcion']), 0, 0, 'C');

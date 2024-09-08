@@ -230,6 +230,25 @@ class ComprasModel extends Query
         return $res;
     }
 
+    public function getAnularVenta(int $id_venta)
+    {
+        $sql = "SELECT v.*, d.* FROM ventas v INNER JOIN detalle_venta d ON v.id = d.id_venta WHERE v.id = $id_venta";
+        $data = $this->selectAll($sql);
+        return $data;
+    }
+    public function getAnularV(int $id_venta)
+    {
+        $sql = "UPDATE ventas SET estado = ? WHERE id = ?";
+        $datos = array(0, $id_venta);
+        $data = $this->save($sql, $datos);
+        if ($data == 1) {
+            $res = "ok";
+        } else {
+            $res = "error";
+        }
+        return $res;
+    }
+
     public function verificarCaja(int $id)
     {
         $sql = "SELECT * FROM cierre_caja WHERE id_usuario = $id AND estado = 1";
@@ -239,7 +258,7 @@ class ComprasModel extends Query
 
     public function getRangoFechas(string $desde, string $hasta)
     {
-        $sql = "SELECT c.id, c.nombre, v.* FROM clientes c INNER JOIN ventas v ON v.id_cliente = c.id WHERE v.fecha BETWEEN '$desde' AND '$hasta'";
+        $sql = "SELECT c.id, c.nombre, p.id, p.descripcion, v.* FROM clientes c INNER JOIN ventas v ON v.id_cliente = c.id INNER JOIN productos p ON v.id_producto = p.descripcion WHERE v.fecha BETWEEN '$desde' AND '$hasta'";
         $data = $this->selectAll($sql);
         return $data;
     }
