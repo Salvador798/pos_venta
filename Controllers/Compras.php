@@ -13,7 +13,7 @@ class Compras extends Controller
         if (!empty($verificar) || $id_user == 1) {
             $this->views->getView($this, "index");
         } else {
-            header('location: ' . APP_URL . 'errors/permisos');
+            header('location: ' . APP_URL . 'Errors/permisos');
         }
     }
     public function ventas()
@@ -24,7 +24,7 @@ class Compras extends Controller
             $data = $this->model->getClientes();
             $this->views->getView($this, "ventas", $data);
         } else {
-            header('location: ' . APP_URL . 'errors/permisos');
+            header('location: ' . APP_URL . 'Errors/permisos');
         }
     }
     public function historial_ventas()
@@ -34,7 +34,7 @@ class Compras extends Controller
         if (!empty($verificar) || $id_user == 1) {
             $this->views->getView($this, "historial_ventas");
         } else {
-            header('location: ' . APP_URL . 'errors/permisos');
+            header('location: ' . APP_URL . 'Errors/permisos');
         }
     }
 
@@ -271,7 +271,7 @@ class Compras extends Controller
         if (!empty($verificar) || $id_user == 1) {
             $this->views->getView($this, "historial");
         } else {
-            header('location: ' . APP_URL . 'errors/permisos');
+            header('location: ' . APP_URL . 'Errors/permisos');
         }
     }
     public function listar_historial()

@@ -4,7 +4,7 @@
 </ol>
 <button class="btn btn-primary mb-2" type="button" onclick="frmCliente();"><i class="fas fa-plus"></i></button>
 <table class="table table-light" id="tblClientes">
-    <thead class="table table-dark">
+    <thead class="table sub_title">
         <tr>
             <th class="text-center">Id</th>
             <th class="text-center">Dni</th>

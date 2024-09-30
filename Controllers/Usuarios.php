@@ -17,7 +17,7 @@ class Usuarios extends Controller
             $data['cajas'] = $this->model->getCajas();
             $this->views->getView($this, "index", $data);
         } else {
-            header('location: ' . APP_URL . 'errors/permisos');
+            header('location: ' . APP_URL . 'Errors/permisos');
         }
     }
     public function listar()
@@ -34,13 +34,13 @@ class Usuarios extends Controller
                     $data[$i]['acciones'] = '<div>
                     <a class="btn btn-dark" href="' . APP_URL . 'Usuarios/permisos/' . $data[$i]['id'] . '"><i class="fas fa-key"></i></a>
                     <button class="btn btn-primary" type="button" onclick="btnEditarUser(' . $data[$i]['id'] . ');"><i class="fas fa-edit"></i></button>
-                    <button class="btn btn-danger" type="button" onclick=" btnEliminarUser(' . $data[$i]['id'] . ');"><i class="fas fa-trash-alt"></i></button>
+                    <button class="btn btn-danger" type="button" onclick=" btnEliminarUser(' . $data[$i]['id'] . ');"><i class="fa-solid fa-lock"></i></button>
                     </div>';
                 }
             } else {
                 $data[$i]['estado'] = '<span class="badge badge-danger">Inactivo</span>';
                 $data[$i]['acciones'] = '<div>
-                <button class="btn btn-success" type="button" onclick=" btnReingresarUser(' . $data[$i]['id'] . ');">Reingresar</button>
+                <button class="btn btn-success" type="button" onclick=" btnReingresarUser(' . $data[$i]['id'] . ');"><i class="fa-solid fa-unlock"></i></button>
                 </div>';
             }
         }

@@ -16,7 +16,7 @@ class Caja extends Controller
         if (!empty($verificar) || $id_user == 1) {
             $this->views->getView($this, "index");
         } else {
-            header('location: ' . APP_URL . 'errors/permisos');
+            header('location: ' . APP_URL . 'Errors/permisos');
         }
     }
     public function arqueo()
@@ -26,7 +26,7 @@ class Caja extends Controller
         if (!empty($verificar) || $id_user == 1) {
             $this->views->getView($this, "arqueo");
         } else {
-            header('location: ' . APP_URL . 'errors/permisos');
+            header('location: ' . APP_URL . 'Errors/permisos');
         }
     }
     public function listar()
@@ -37,12 +37,12 @@ class Caja extends Controller
                 $data[$i]['estado'] = '<span class="badge badge-success">Activo</span>';
                 $data[$i]['acciones'] = '<div>
                 <button class="btn btn-primary" type="button" onclick="btnEditarCaj(' . $data[$i]['id'] . ');"><i class="fas fa-edit"></i></button>
-                <button class="btn btn-danger" type="button" onclick=" btnEliminarCaj(' . $data[$i]['id'] . ');"><i class="fas fa-trash-alt"></i></button>
+                <button class="btn btn-danger" type="button" onclick=" btnEliminarCaj(' . $data[$i]['id'] . ');"><i class="fa-solid fa-lock"></i></button>
                 </div>';
             } else {
                 $data[$i]['estado'] = '<span class="badge badge-danger">Inactivo</span>';
                 $data[$i]['acciones'] = '<div>
-                <button class="btn btn-success" type="button" onclick=" btnReingresarCaj(' . $data[$i]['id'] . ');">Reingresar</button>
+                <button class="btn btn-success" type="button" onclick=" btnReingresarCaj(' . $data[$i]['id'] . ');"><i class="fa-solid fa-unlock"></i></button>
                 </div>';
             }
         }

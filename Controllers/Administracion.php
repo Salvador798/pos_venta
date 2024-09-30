@@ -17,7 +17,7 @@ class Administracion extends Controller
             $data = $this->model->getEmpresa();
             $this->views->getView($this, "index", $data);
         } else {
-            header('location: ' . APP_URL . 'errors/permisos');
+            header('location: ' . APP_URL . 'Errors/permisos');
         }
     }
     public function home()

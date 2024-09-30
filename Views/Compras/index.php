@@ -62,6 +62,7 @@
             <label for="total" class="font-weight-bold">Total</label>
             <input id="total" class="form-control" type="text" name="total" placeholder="Total" disabled>
             <button class="btn btn-primary mt-2 btn-block" type="button" onclick="procesar(1)">Generar Compra</button>
+            <a href="<?php echo APP_URL; ?>Compras/historial" class="btn btn-warning mt-2 btn-block" type="button">Historial de las compras</a>
         </div>
     </div>
 </div>
