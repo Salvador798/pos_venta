@@ -5,6 +5,7 @@ let tblUsuarios,
   tblCategorias,
   tblProductos,
   t_h_c,
+  t_h_v,
   t_arqueo;
 document.addEventListener("DOMContentLoaded", function () {
   $("#cliente").select2();
@@ -14,25 +15,13 @@ document.addEventListener("DOMContentLoaded", function () {
       url: APP_URL + "Usuarios/listar",
       dataSrc: "",
     },
+    order: [3, "asc"],
     columns: [
-      {
-        data: "id",
-      },
-      {
-        data: "usuario",
-      },
-      {
-        data: "nombre",
-      },
-      {
-        data: "caja",
-      },
-      {
-        data: "estado",
-      },
-      {
-        data: "acciones",
-      },
+      { data: "usuario" },
+      { data: "nombre" },
+      { data: "caja" },
+      { data: "estado" },
+      { data: "acciones" },
     ],
     language: {
       url: "https://cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json",
@@ -104,28 +93,14 @@ document.addEventListener("DOMContentLoaded", function () {
       url: APP_URL + "Clientes/listar",
       dataSrc: "",
     },
+    order: [[4, "asc"]],
     columns: [
-      {
-        data: "id",
-      },
-      {
-        data: "dni",
-      },
-      {
-        data: "nombre",
-      },
-      {
-        data: "telefono",
-      },
-      {
-        data: "direccion",
-      },
-      {
-        data: "estado",
-      },
-      {
-        data: "acciones",
-      },
+      { data: "dni" },
+      { data: "nombre" },
+      { data: "telefono" },
+      { data: "direccion" },
+      { data: "estado" },
+      { data: "acciones" },
     ],
     language: {
       url: "https://cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json",
@@ -197,20 +172,8 @@ document.addEventListener("DOMContentLoaded", function () {
       url: APP_URL + "Categorias/listar",
       dataSrc: "",
     },
-    columns: [
-      {
-        data: "id",
-      },
-      {
-        data: "nombre",
-      },
-      {
-        data: "estado",
-      },
-      {
-        data: "acciones",
-      },
-    ],
+    order: [1, "asc"],
+    columns: [{ data: "nombre" }, { data: "estado" }, { data: "acciones" }],
     language: {
       url: "https://cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json",
     },
@@ -282,20 +245,8 @@ document.addEventListener("DOMContentLoaded", function () {
       url: APP_URL + "Caja/listar",
       dataSrc: "",
     },
-    columns: [
-      {
-        data: "id",
-      },
-      {
-        data: "caja",
-      },
-      {
-        data: "estado",
-      },
-      {
-        data: "acciones",
-      },
-    ],
+    order: [1, "asc"],
+    columns: [{ data: "caja" }, { data: "estado" }, { data: "acciones" }],
     language: {
       url: "https://cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json",
     },
@@ -366,20 +317,8 @@ document.addEventListener("DOMContentLoaded", function () {
       url: APP_URL + "Medidas/listar",
       dataSrc: "",
     },
-    columns: [
-      {
-        data: "id",
-      },
-      {
-        data: "nombre",
-      },
-      {
-        data: "estado",
-      },
-      {
-        data: "acciones",
-      },
-    ],
+    order: [1, "asc"],
+    columns: [{ data: "nombre" }, { data: "estado" }, { data: "acciones" }],
     language: {
       url: "https://cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json",
     },
@@ -450,31 +389,25 @@ document.addEventListener("DOMContentLoaded", function () {
       url: APP_URL + "Productos/listar",
       dataSrc: "",
     },
+    order: [6, "asc"],
     columns: [
-      {
-        data: "id",
-      },
-      {
-        data: "imagen",
-      },
-      {
-        data: "codigo",
-      },
-      {
-        data: "descripcion",
-      },
+      { data: "codigo" },
+      { data: "descripcion" },
+      { data: "imagen" },
       {
         data: "precio_venta",
+        render: function (data, type, row) {
+          if (type === "display") {
+            const formattedPrice = numberFormat(data, 2, ",", ".");
+            return `Bs ${formattedPrice}`;
+          }
+          return data;
+        },
       },
-      {
-        data: "cantidad",
-      },
-      {
-        data: "estado",
-      },
-      {
-        data: "acciones",
-      },
+      { data: "iva" },
+      { data: "cantidad" },
+      { data: "estado" },
+      { data: "acciones" },
     ],
     language: {
       url: "https://cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json",
@@ -546,9 +479,18 @@ document.addEventListener("DOMContentLoaded", function () {
       url: APP_URL + "Compras/listar_historial",
       dataSrc: "",
     },
+    order: [2, "asc"],
     columns: [
-      { data: "id" },
-      { data: "total" },
+      {
+        data: "total",
+        render: function (data, type, row) {
+          if (type === "display") {
+            const formattedPrice = numberFormat(data, 2, ",", ".");
+            return `Bs ${formattedPrice}`;
+          }
+          return data;
+        },
+      },
       { data: "fecha" },
       { data: "estado" },
       { data: "acciones" },
@@ -624,21 +566,19 @@ document.addEventListener("DOMContentLoaded", function () {
       dataSrc: "",
     },
     columns: [
-      {
-        data: "id",
-      },
-      {
-        data: "nombre",
-      },
+      { data: "nombre" },
       {
         data: "total",
+        render: function (data, type, row) {
+          if (type === "display") {
+            const formattedPrice = numberFormat(data, 2, ",", ".");
+            return `Bs ${formattedPrice}`;
+          }
+          return data;
+        },
       },
-      {
-        data: "fecha",
-      },
-      {
-        data: "acciones",
-      },
+      { data: "fecha" },
+      { data: "acciones" },
     ],
     language: {
       url: "https://cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json",
@@ -710,31 +650,15 @@ document.addEventListener("DOMContentLoaded", function () {
       url: APP_URL + "Caja/listar_arqueo",
       dataSrc: "",
     },
+    order: [6, "asc"],
     columns: [
-      {
-        data: "id",
-      },
-      {
-        data: "monto_inicial",
-      },
-      {
-        data: "monto_final",
-      },
-      {
-        data: "fecha_apertura",
-      },
-      {
-        data: "fecha_cierre",
-      },
-      {
-        data: "total_ventas",
-      },
-      {
-        data: "monto_total",
-      },
-      {
-        data: "estado",
-      },
+      { data: "monto_inicial" },
+      { data: "monto_final" },
+      { data: "fecha_apertura" },
+      { data: "fecha_cierre" },
+      { data: "total_ventas" },
+      { data: "monto_total" },
+      { data: "estado" },
     ],
     language: {
       url: "https://cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json",
@@ -800,6 +724,34 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   // Fin tabla medida
 });
+
+// Formatear el precio a Bs
+function numberFormat(number, decimals, decPoint, thousandsSep) {
+  if (number == null || !isFinite(number)) {
+    throw new TypeError("El número no es válido");
+  }
+
+  if (!decimals) {
+    const len = number.toString().split(".").length;
+    decimals = len > 1 ? len : 0;
+  }
+
+  if (!decPoint) {
+    decPoint = ".";
+  }
+
+  if (!thousandsSep) {
+    thousandsSep = ",";
+  }
+
+  number = parseFloat(number).toFixed(decimals);
+  number = number.replace(".", decPoint);
+
+  const splitNum = number.split(decPoint);
+  splitNum[0] = splitNum[0].replace(/\B(?=(\d{3})+(?!\d))/g, thousandsSep);
+
+  return splitNum.join(decPoint);
+}
 
 // Cambiar Contraseña
 function frmCambiarPass(e) {
@@ -890,58 +842,58 @@ function btnEditarUser(id) {
 
 // Eliminar usuarios
 function btnEliminarUser(id) {
-  Swal.fire({
-    title: "¿Está seguro de eliminar?",
-    text: "El usuario no se liminará permanente, solo se cambiará el estado a inactivo",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Si",
-    cancelButtonText: "No",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      const url = APP_URL + "Usuarios/eliminar/" + id;
-      const http = new XMLHttpRequest();
-      http.open("GET", url, true);
-      http.send();
-      http.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-          const res = JSON.parse(this.responseText);
-          alertas(res.msg, res.icono);
-          tblUsuarios.ajax.reload();
-        }
-      };
+  // Swal.fire({
+  //   title: "¿Está seguro de eliminar?",
+  //   text: "El usuario no se liminará permanente, solo se cambiará el estado a inactivo",
+  //   icon: "warning",
+  //   showCancelButton: true,
+  //   confirmButtonColor: "#3085d6",
+  //   cancelButtonColor: "#d33",
+  //   confirmButtonText: "Si",
+  //   cancelButtonText: "No",
+  // }).then((result) => {
+  // if (result.isConfirmed) {
+  const url = APP_URL + "Usuarios/eliminar/" + id;
+  const http = new XMLHttpRequest();
+  http.open("GET", url, true);
+  http.send();
+  http.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      const res = JSON.parse(this.responseText);
+      alertas(res.msg, res.icono);
+      tblUsuarios.ajax.reload();
     }
-  });
+  };
 }
+// });
+// }
 
 // Ingresar usuarios
 function btnReingresarUser(id) {
-  Swal.fire({
-    title: "¿Está seguro de reingresar?",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Si",
-    cancelButtonText: "No",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      const url = APP_URL + "Usuarios/reingresar/" + id;
-      const http = new XMLHttpRequest();
-      http.open("GET", url, true);
-      http.send();
-      http.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-          const res = JSON.parse(this.responseText);
-          tblUsuarios.ajax.reload();
-          alertas(res.msg, res.icono);
-        }
-      };
+  // Swal.fire({
+  //   title: "¿Está seguro de reingresar?",
+  //   icon: "warning",
+  //   showCancelButton: true,
+  //   confirmButtonColor: "#3085d6",
+  //   cancelButtonColor: "#d33",
+  //   confirmButtonText: "Si",
+  //   cancelButtonText: "No",
+  // }).then((result) => {
+  //   if (result.isConfirmed) {
+  const url = APP_URL + "Usuarios/reingresar/" + id;
+  const http = new XMLHttpRequest();
+  http.open("GET", url, true);
+  http.send();
+  http.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      const res = JSON.parse(this.responseText);
+      tblUsuarios.ajax.reload();
+      alertas(res.msg, res.icono);
     }
-  });
+  };
 }
+//   });
+// }
 // Fin usuarios
 
 // Agregar clientes
@@ -1007,58 +959,58 @@ function btnEditarCli(id) {
 
 // Eliminar clientes
 function btnEliminarCli(id) {
-  Swal.fire({
-    title: "¿Está seguro de eliminar?",
-    text: "El cliente no se liminará permanente, solo se cambiará el estado a inactivo",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Si",
-    cancelButtonText: "No",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      const url = APP_URL + "Clientes/eliminar/" + id;
-      const http = new XMLHttpRequest();
-      http.open("GET", url, true);
-      http.send();
-      http.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-          const res = JSON.parse(this.responseText);
-          alertas(res.msg, res.icono);
-          tblClientes.ajax.reload();
-        }
-      };
+  // Swal.fire({
+  //   title: "¿Está seguro de eliminar?",
+  //   text: "El cliente no se liminará permanente, solo se cambiará el estado a inactivo",
+  //   icon: "warning",
+  //   showCancelButton: true,
+  //   confirmButtonColor: "#3085d6",
+  //   cancelButtonColor: "#d33",
+  //   confirmButtonText: "Si",
+  //   cancelButtonText: "No",
+  // }).then((result) => {
+  //   if (result.isConfirmed) {
+  const url = APP_URL + "Clientes/eliminar/" + id;
+  const http = new XMLHttpRequest();
+  http.open("GET", url, true);
+  http.send();
+  http.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      const res = JSON.parse(this.responseText);
+      alertas(res.msg, res.icono);
+      tblClientes.ajax.reload();
     }
-  });
+  };
 }
+//   });
+// }
 
 // Ingresar clientes
 function btnReingresarCli(id) {
-  Swal.fire({
-    title: "¿Está seguro de reingresar?",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Si",
-    cancelButtonText: "No",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      const url = APP_URL + "Clientes/reingresar/" + id;
-      const http = new XMLHttpRequest();
-      http.open("GET", url, true);
-      http.send();
-      http.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-          const res = JSON.parse(this.responseText);
-          alertas(res.msg, res.icono);
-          tblClientes.ajax.reload();
-        }
-      };
+  // Swal.fire({
+  //   title: "¿Está seguro de reingresar?",
+  //   icon: "warning",
+  //   showCancelButton: true,
+  //   confirmButtonColor: "#3085d6",
+  //   cancelButtonColor: "#d33",
+  //   confirmButtonText: "Si",
+  //   cancelButtonText: "No",
+  // }).then((result) => {
+  //   if (result.isConfirmed) {
+  const url = APP_URL + "Clientes/reingresar/" + id;
+  const http = new XMLHttpRequest();
+  http.open("GET", url, true);
+  http.send();
+  http.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      const res = JSON.parse(this.responseText);
+      alertas(res.msg, res.icono);
+      tblClientes.ajax.reload();
     }
-  });
+  };
 }
+//   });
+// }
 // Fin clientes
 
 // Agregar categorias
@@ -1113,58 +1065,58 @@ function btnEditarCat(id) {
 
 // Eliminar categorias
 function btnEliminarCat(id) {
-  Swal.fire({
-    title: "¿Está seguro de eliminar?",
-    text: "La categoria no se liminará permanente, solo se cambiará el estado a inactivo",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Si",
-    cancelButtonText: "No",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      const url = APP_URL + "Categorias/eliminar/" + id;
-      const http = new XMLHttpRequest();
-      http.open("GET", url, true);
-      http.send();
-      http.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-          const res = JSON.parse(this.responseText);
-          alertas(res.msg, res.icono);
-          tblCategorias.ajax.reload();
-        }
-      };
+  // Swal.fire({
+  //   title: "¿Está seguro de eliminar?",
+  //   text: "La categoria no se liminará permanente, solo se cambiará el estado a inactivo",
+  //   icon: "warning",
+  //   showCancelButton: true,
+  //   confirmButtonColor: "#3085d6",
+  //   cancelButtonColor: "#d33",
+  //   confirmButtonText: "Si",
+  //   cancelButtonText: "No",
+  // }).then((result) => {
+  //   if (result.isConfirmed) {
+  const url = APP_URL + "Categorias/eliminar/" + id;
+  const http = new XMLHttpRequest();
+  http.open("GET", url, true);
+  http.send();
+  http.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      const res = JSON.parse(this.responseText);
+      alertas(res.msg, res.icono);
+      tblCategorias.ajax.reload();
     }
-  });
+  };
 }
+//   });
+// }
 
 // Ingresar categorias
 function btnReingresarCat(id) {
-  Swal.fire({
-    title: "¿Está seguro de reingresar?",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Si",
-    cancelButtonText: "No",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      const url = APP_URL + "Categorias/reingresar/" + id;
-      const http = new XMLHttpRequest();
-      http.open("GET", url, true);
-      http.send();
-      http.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-          const res = JSON.parse(this.responseText);
-          tblCategorias.ajax.reload();
-          alertas(res.msg, res.icono);
-        }
-      };
+  // Swal.fire({
+  //   title: "¿Está seguro de reingresar?",
+  //   icon: "warning",
+  //   showCancelButton: true,
+  //   confirmButtonColor: "#3085d6",
+  //   cancelButtonColor: "#d33",
+  //   confirmButtonText: "Si",
+  //   cancelButtonText: "No",
+  // }).then((result) => {
+  //   if (result.isConfirmed) {
+  const url = APP_URL + "Categorias/reingresar/" + id;
+  const http = new XMLHttpRequest();
+  http.open("GET", url, true);
+  http.send();
+  http.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      const res = JSON.parse(this.responseText);
+      tblCategorias.ajax.reload();
+      alertas(res.msg, res.icono);
     }
-  });
+  };
 }
+//   });
+// }
 // Fin categorias
 
 // Agregar caja
@@ -1219,58 +1171,58 @@ function btnEditarCaj(id) {
 
 // Eliminar caja
 function btnEliminarCaj(id) {
-  Swal.fire({
-    title: "¿Está seguro de eliminar?",
-    text: "La caja no se liminará permanente, solo se cambiará el estado a inactivo",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Si",
-    cancelButtonText: "No",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      const url = APP_URL + "Caja/eliminar/" + id;
-      const http = new XMLHttpRequest();
-      http.open("GET", url, true);
-      http.send();
-      http.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-          const res = JSON.parse(this.responseText);
-          alertas(res.msg, res.icono);
-          tblCajas.ajax.reload();
-        }
-      };
+  // Swal.fire({
+  //   title: "¿Está seguro de eliminar?",
+  //   text: "La caja no se liminará permanente, solo se cambiará el estado a inactivo",
+  //   icon: "warning",
+  //   showCancelButton: true,
+  //   confirmButtonColor: "#3085d6",
+  //   cancelButtonColor: "#d33",
+  //   confirmButtonText: "Si",
+  //   cancelButtonText: "No",
+  // }).then((result) => {
+  //   if (result.isConfirmed) {
+  const url = APP_URL + "Caja/eliminar/" + id;
+  const http = new XMLHttpRequest();
+  http.open("GET", url, true);
+  http.send();
+  http.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      const res = JSON.parse(this.responseText);
+      alertas(res.msg, res.icono);
+      tblCajas.ajax.reload();
     }
-  });
+  };
 }
+//   });
+// }
 
 // Ingresar caja
 function btnReingresarCaj(id) {
-  Swal.fire({
-    title: "¿Está seguro de reingresar?",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Si",
-    cancelButtonText: "No",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      const url = APP_URL + "Caja/reingresar/" + id;
-      const http = new XMLHttpRequest();
-      http.open("GET", url, true);
-      http.send();
-      http.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-          const res = JSON.parse(this.responseText);
-          tblCajas.ajax.reload();
-          alertas(res.msg, res.icono);
-        }
-      };
+  // Swal.fire({
+  //   title: "¿Está seguro de reingresar?",
+  //   icon: "warning",
+  //   showCancelButton: true,
+  //   confirmButtonColor: "#3085d6",
+  //   cancelButtonColor: "#d33",
+  //   confirmButtonText: "Si",
+  //   cancelButtonText: "No",
+  // }).then((result) => {
+  //   if (result.isConfirmed) {
+  const url = APP_URL + "Caja/reingresar/" + id;
+  const http = new XMLHttpRequest();
+  http.open("GET", url, true);
+  http.send();
+  http.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      const res = JSON.parse(this.responseText);
+      tblCajas.ajax.reload();
+      alertas(res.msg, res.icono);
     }
-  });
+  };
 }
+//   });
+// }
 // Fin tabla Caja
 
 // Agregar medida
@@ -1325,58 +1277,58 @@ function btnEditarMed(id) {
 
 // Eliminar medida
 function btnEliminarMed(id) {
-  Swal.fire({
-    title: "¿Está seguro de eliminar?",
-    text: "La medida no se liminará permanente, solo se cambiará el estado a inactivo",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Si",
-    cancelButtonText: "No",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      const url = APP_URL + "Medidas/eliminar/" + id;
-      const http = new XMLHttpRequest();
-      http.open("GET", url, true);
-      http.send();
-      http.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-          const res = JSON.parse(this.responseText);
-          alertas(res.msg, res.icono);
-          tblMedidas.ajax.reload();
-        }
-      };
+  // Swal.fire({
+  //   title: "¿Está seguro de eliminar?",
+  //   text: "La medida no se liminará permanente, solo se cambiará el estado a inactivo",
+  //   icon: "warning",
+  //   showCancelButton: true,
+  //   confirmButtonColor: "#3085d6",
+  //   cancelButtonColor: "#d33",
+  //   confirmButtonText: "Si",
+  //   cancelButtonText: "No",
+  // }).then((result) => {
+  //   if (result.isConfirmed) {
+  const url = APP_URL + "Medidas/eliminar/" + id;
+  const http = new XMLHttpRequest();
+  http.open("GET", url, true);
+  http.send();
+  http.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      const res = JSON.parse(this.responseText);
+      alertas(res.msg, res.icono);
+      tblMedidas.ajax.reload();
     }
-  });
+  };
 }
+//   });
+// }
 
 // Ingresar medida
 function btnReingresarMed(id) {
-  Swal.fire({
-    title: "¿Está seguro de reingresar?",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Si",
-    cancelButtonText: "No",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      const url = APP_URL + "Medidas/reingresar/" + id;
-      const http = new XMLHttpRequest();
-      http.open("GET", url, true);
-      http.send();
-      http.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-          const res = JSON.parse(this.responseText);
-          tblMedidas.ajax.reload();
-          alertas(res.msg, res.icono);
-        }
-      };
+  // Swal.fire({
+  //   title: "¿Está seguro de reingresar?",
+  //   icon: "warning",
+  //   showCancelButton: true,
+  //   confirmButtonColor: "#3085d6",
+  //   cancelButtonColor: "#d33",
+  //   confirmButtonText: "Si",
+  //   cancelButtonText: "No",
+  // }).then((result) => {
+  //   if (result.isConfirmed) {
+  const url = APP_URL + "Medidas/reingresar/" + id;
+  const http = new XMLHttpRequest();
+  http.open("GET", url, true);
+  http.send();
+  http.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      const res = JSON.parse(this.responseText);
+      tblMedidas.ajax.reload();
+      alertas(res.msg, res.icono);
     }
-  });
+  };
 }
+//   });
+// }
 // Fin tabla medida
 
 // Agregar Productos
@@ -1396,6 +1348,7 @@ function registrarPro(e) {
   const nombre = document.getElementById("nombre");
   const precio_compra = document.getElementById("precio_compra");
   const precio_venta = document.getElementById("precio_venta");
+  const iva = document.getElementById("iva");
   const id_medida = document.getElementById("medida");
   const id_cat = document.getElementById("categoria");
   if (
@@ -1438,6 +1391,7 @@ function btnEditarPro(id) {
       document.getElementById("nombre").value = res.descripcion;
       document.getElementById("precio_compra").value = res.precio_compra;
       document.getElementById("precio_venta").value = res.precio_venta;
+      document.getElementById("iva").value = res.iva;
       document.getElementById("medida").value = res.id_medida;
       document.getElementById("categoria").value = res.id_categoria;
       document.getElementById("img-preview").src =
@@ -1455,58 +1409,58 @@ function btnEditarPro(id) {
 
 // Eliminar Productos
 function btnEliminarPro(id) {
-  Swal.fire({
-    title: "¿Está seguro de eliminar?",
-    text: "El producto no se liminará permanente, solo se cambiará el estado a inactivo",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Si",
-    cancelButtonText: "No",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      const url = APP_URL + "Productos/eliminar/" + id;
-      const http = new XMLHttpRequest();
-      http.open("GET", url, true);
-      http.send();
-      http.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-          const res = JSON.parse(this.responseText);
-          tblProductos.ajax.reload();
-          alertas(res.msg, res.icono);
-        }
-      };
+  // Swal.fire({
+  //   title: "¿Está seguro de eliminar?",
+  //   text: "El producto no se liminará permanente, solo se cambiará el estado a inactivo",
+  //   icon: "warning",
+  //   showCancelButton: true,
+  //   confirmButtonColor: "#3085d6",
+  //   cancelButtonColor: "#d33",
+  //   confirmButtonText: "Si",
+  //   cancelButtonText: "No",
+  // }).then((result) => {
+  //   if (result.isConfirmed) {
+  const url = APP_URL + "Productos/eliminar/" + id;
+  const http = new XMLHttpRequest();
+  http.open("GET", url, true);
+  http.send();
+  http.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      const res = JSON.parse(this.responseText);
+      tblProductos.ajax.reload();
+      alertas(res.msg, res.icono);
     }
-  });
+  };
 }
+//   });
+// }
 
 // Ingresar Productos
 function btnReingresarPro(id) {
-  Swal.fire({
-    title: "¿Está seguro de reingresar?",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Si",
-    cancelButtonText: "No",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      const url = APP_URL + "Productos/reingresar/" + id;
-      const http = new XMLHttpRequest();
-      http.open("GET", url, true);
-      http.send();
-      http.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-          const res = JSON.parse(this.responseText);
-          tblProductos.ajax.reload();
-          alertas(res.msg, res.icono);
-        }
-      };
+  // Swal.fire({
+  //   title: "¿Está seguro de reingresar?",
+  //   icon: "warning",
+  //   showCancelButton: true,
+  //   confirmButtonColor: "#3085d6",
+  //   cancelButtonColor: "#d33",
+  //   confirmButtonText: "Si",
+  //   cancelButtonText: "No",
+  // }).then((result) => {
+  //   if (result.isConfirmed) {
+  const url = APP_URL + "Productos/reingresar/" + id;
+  const http = new XMLHttpRequest();
+  http.open("GET", url, true);
+  http.send();
+  http.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      const res = JSON.parse(this.responseText);
+      tblProductos.ajax.reload();
+      alertas(res.msg, res.icono);
     }
-  });
+  };
 }
+//   });
+// }
 
 // foto productos
 function preview(e) {
@@ -1555,9 +1509,9 @@ function buscarCodigo(e) {
         }
       };
     }
-  } else {
-    alertas("Ingrese el código", "warning");
-  }
+  } //else {
+  //alertas("Ingrese el código", "warning");
+  //}
 }
 
 // Buscar codigo venta
@@ -1588,9 +1542,9 @@ function buscarCodigoVenta(e) {
         }
       };
     }
-  } else {
-    alertas("Ingrese el código", "warning");
-  }
+  } //else {
+  //   alertas("Ingrese el código", "warning");
+  // }
 }
 
 // Calcular Precio de los Productos
@@ -1658,6 +1612,7 @@ if (document.getElementById("tblDetalle")) {
 if (document.getElementById("tblDetalleVenta")) {
   cargarDetalleVenta();
 }
+
 function cargarDetalle() {
   const url = APP_URL + "Compras/listar/detalle";
   const http = new XMLHttpRequest();
@@ -1669,11 +1624,10 @@ function cargarDetalle() {
       let html = "";
       res.detalle.forEach((row) => {
         html += `<tr>
-        <td>${row["id"]}</td>
         <td>${row["descripcion"]}</td>
         <td>${row["cantidad"]}</td>
-        <td>${row["precio"]}</td>
-        <td>${row["sub_total"]}</td>
+        <td>Bs ${row["precio"]}</td>
+        <td>Bs ${row["sub_total"]}</td>
         <td>
         <button class="btn btn-danger" type="button" onclick="deleteDetalle(${row["id"]}, 1)">
         <i class="fas fa-trash-alt"></i></button>
@@ -1681,7 +1635,7 @@ function cargarDetalle() {
         </tr>`;
       });
       document.getElementById("tblDetalle").innerHTML = html;
-      document.getElementById("total").value = res.total_pagar.total;
+      document.getElementById("total").value = `Bs ${res.total_pagar}`;
     }
   };
 }
@@ -1698,13 +1652,12 @@ function cargarDetalleVenta() {
       let html = "";
       res.detalle.forEach((row) => {
         html += `<tr>
-        <td>${row["id"]}</td>
         <td>${row["descripcion"]}</td>
         <td>${row["cantidad"]}</td>
         <td><input class="form-control" placeholder="Desc" type="text" onkeyup="calcularDescuento(event, ${row["id"]})"></td>
         <td>${row["descuento"]}</td>
-        <td>${row["precio"]}</td>
-        <td>${row["sub_total"]}</td>
+        <td>Bs ${row["precio"]}</td>
+        <td>Bs ${row["sub_total"]}</td>
         <td>
         <button class="btn btn-danger" type="button" onclick="deleteDetalle(${row["id"]}, 0)">
         <i class="fas fa-trash-alt"></i></button>
@@ -1712,7 +1665,7 @@ function cargarDetalleVenta() {
         </tr>`;
       });
       document.getElementById("tblDetalleVenta").innerHTML = html;
-      document.getElementById("total").value = res.total_pagar.total;
+      document.getElementById("total").value = `Bs ${res.total_pagar}`;
     }
   };
 }
@@ -1721,7 +1674,7 @@ function cargarDetalleVenta() {
 function calcularDescuento(e, id) {
   e.preventDefault();
   if (e.target.value == "") {
-    alertas("Ingrese el Descuento", "warning");
+    // alertas("Ingrese el Descuento", "warning");
   } else {
     if (e.which == 13) {
       const url =
@@ -1732,7 +1685,7 @@ function calcularDescuento(e, id) {
       http.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
           const res = JSON.parse(this.responseText);
-          alertas(res.msg, res.icono);
+          // alertas(res.msg, res.icono);
           cargarDetalleVenta();
         }
       };
@@ -1754,7 +1707,7 @@ function deleteDetalle(id, accion) {
   http.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
       const res = JSON.parse(this.responseText);
-      alertas(res.msg, res.icono);
+      // alertas(res.msg, res.icono);
       if (accion == 1) {
         cargarDetalle();
       } else {
@@ -1766,49 +1719,49 @@ function deleteDetalle(id, accion) {
 
 // Generar compra
 function procesar(accion) {
-  Swal.fire({
-    title: "¿Está seguro de realizar la compra?",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Si",
-    cancelButtonText: "No",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      let url;
-      if (accion == 1) {
-        url = APP_URL + "Compras/registrarCompra";
-      } else {
-        const id_cliente = document.getElementById("cliente").value;
-        url = APP_URL + "Compras/registrarVenta/" + id_cliente;
-      }
-      const http = new XMLHttpRequest();
-      http.open("GET", url, true);
-      http.send();
-      http.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-          const res = JSON.parse(this.responseText);
-          if (res.msg == "ok") {
-            alertas(res.msg, res.icono);
-            let ruta;
-            if (accion == 1) {
-              ruta = APP_URL + "Compras/generarPdf/" + res.id_compra;
-            } else {
-              ruta = APP_URL + "Compras/generarPdfVenta/" + res.id_venta;
-            }
-            window.open(ruta);
-            setTimeout(() => {
-              window.location.reload();
-            }, 3000);
-          } else {
-            alertas(res.msg, res.icono);
-          }
+  // Swal.fire({
+  //   title: "¿Está seguro de realizar la compra?",
+  //   icon: "warning",
+  //   showCancelButton: true,
+  //   confirmButtonColor: "#3085d6",
+  //   cancelButtonColor: "#d33",
+  //   confirmButtonText: "Si",
+  //   cancelButtonText: "No",
+  // }).then((result) => {
+  // if (isConfirmed) {
+  let url;
+  if (accion == 1) {
+    url = APP_URL + "Compras/registrarCompra";
+  } else {
+    const id_cliente = document.getElementById("cliente").value;
+    url = APP_URL + "Compras/registrarVenta/" + id_cliente;
+  }
+  const http = new XMLHttpRequest();
+  http.open("GET", url, true);
+  http.send();
+  http.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      const res = JSON.parse(this.responseText);
+      if (res.msg == "ok") {
+        // alertas(res.msg, res.icono);
+        let ruta;
+        if (accion == 1) {
+          ruta = APP_URL + "Compras/generarPdf/" + res.id_compra;
+        } else {
+          ruta = APP_URL + "Compras/generarPdfVenta/" + res.id_venta;
         }
-      };
+        window.open(ruta);
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+      } else {
+        // alertas(res.msg, res.icono);
+      }
     }
-  });
+  };
 }
+//} );
+//}
 
 // Modificar Empresa
 function modificarEmpresa() {
@@ -1834,7 +1787,7 @@ function alertas(mensaje, icono) {
     icon: icono,
     title: mensaje,
     showConfirmButton: false,
-    timer: 3000,
+    timer: 1500,
   });
 }
 

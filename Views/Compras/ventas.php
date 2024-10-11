@@ -10,13 +10,13 @@
                     <div class="form-group">
                         <label for="codigo"><i class="fas fa-barcode"></i> Código de barras</label>
                         <input type="hidden" id="id" name="id">
-                        <input id="codigo" class="form-control" type="text" name="codigo" placeholder="Código de barras" onkeyup="buscarCodigoVenta(event)">
+                        <input id="codigo" class="form-control" type="text" name="codigo" onkeyup="buscarCodigoVenta(event)">
                     </div>
                 </div>
                 <div class="col-md-5">
                     <div class="form-group">
                         <label for="nombre">Descripción</label>
-                        <input id="nombre" class="form-control" type="text" name="nombre" placeholder="Descripción del producto" disabled>
+                        <input id="nombre" class="form-control" type="text" name="nombre" disabled>
                     </div>
                 </div>
                 <div class="col-md-2">
@@ -28,13 +28,13 @@
                 <div class="col-md-2">
                     <div class="form-group">
                         <label for="precio">Precio</label>
-                        <input id="precio" class="form-control" type="text" name="precio" placeholder="Precio venta" disabled>
+                        <input id="precio" class="form-control" type="text" name="precio" disabled>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
                         <label for="sub_total">Sub Total</label>
-                        <input id="sub_total" class="form-control" type="text" name="sub_total" placeholder="Sub Total" disabled>
+                        <input id="sub_total" class="form-control" type="text" name="sub_total" disabled>
                     </div>
                 </div>
 
@@ -42,22 +42,23 @@
         </form>
     </div>
 </div>
-<table class="table table-light table-bordered table-hover">
-    <thead class="table table-dark">
-        <tr>
-            <th>Id</th>
-            <th>Descripción</th>
-            <th>Cantidad</th>
-            <th>Aplicar</th>
-            <th>Descuento</th>
-            <th>Precio</th>
-            <th>Sub total</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody id="tblDetalleVenta">
-    </tbody>
-</table>
+<div class="scroll-container">
+    <table class="table table-light table-bordered table-hover table-shadow">
+        <thead class="table table-dark">
+            <tr>
+                <th class="text-center">Descripción</th>
+                <th class="text-center">Cantidad</th>
+                <th class="text-center">Aplicar</th>
+                <th class="text-center">Descuento</th>
+                <th class="text-center">Precio</th>
+                <th class="text-center">Sub total</th>
+                <th class="text-center"></th>
+            </tr>
+        </thead>
+        <tbody id="tblDetalleVenta" class="text-center">
+        </tbody>
+    </table>
+</div>
 <div class="row">
     <div class="col-md-4">
         <div class="form-group">

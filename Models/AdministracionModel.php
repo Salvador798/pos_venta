@@ -13,7 +13,7 @@ class AdministracionModel extends Query
     }
     public function getDatos(string $table)
     {
-        $sql = "SELECT COUNT(*) AS total FROM $table";
+        $sql = "SELECT COUNT(*) AS total FROM $table WHERE estado = 1";
         $data = $this->select($sql);
         return $data;
     }
@@ -23,11 +23,11 @@ class AdministracionModel extends Query
         $data = $this->select($sql);
         return $data;
     }
-    public function modificar(string $nombre, string $telefono, string $dir, string $mensaje, int $id)
+    public function modificar(string $ruc, string $nombre, string $telefono, string $dir, string $mensaje, int $id)
     {
 
-        $sql = "UPDATE configuracion SET nombre = ?, telefono = ?, direccion = ?, mensaje = ?, id = ?";
-        $datos = array($nombre, $telefono, $dir, $mensaje, $id);
+        $sql = "UPDATE configuracion SET ruc = ?, nombre = ?, telefono = ?, direccion = ?, mensaje = ?, id = ?";
+        $datos = array($ruc, $nombre, $telefono, $dir, $mensaje, $id);
         $data = $this->save($sql, $datos);
         if ($data == 1) {
             $res = "ok";

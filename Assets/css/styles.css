@@ -11705,3 +11705,49 @@ body {
 .bg-nav {
   background: #f0b823;
 }
+
+input,
+textarea,
+button {
+  border-radius: 10px !important;
+}
+
+.nav-link {
+  color: #000;
+  transition: 0.8s ease;
+}
+
+.nav-link:hover {
+  transition: 0.8s ease;
+  background: #fff;
+  border-radius: 50px;
+}
+
+.card {
+  border-radius: 10px !important;
+}
+
+.border {
+  border-radius: 10px !important;
+  box-shadow: 5px 4px 5px 1px rgba(0, 0, 0, 0.2) !important;
+}
+
+.modal-content {
+  border-radius: 20px !important;
+}
+
+.scroll-container {
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+}
+
+.table-shadow {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}

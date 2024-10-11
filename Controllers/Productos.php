@@ -55,14 +55,18 @@ class Productos extends Controller
         $name = $img['name'];
         $tmpname = $img['tmp_name'];
         $destino = "Assets/img/" . $name;
+        $iva = $_POST['iva'];
         if (empty($name)) {
             $name = "default.png";
+        }
+        if ($iva != 'Exento' && $iva != 'Aplica') {
+            $msg = 'El IVA fue afectado';
         }
         if (empty($codigo) || empty($nombre) || empty($precio_compra) || empty($precio_venta)) {
             $msg = array('msg' => 'Todos los campos son obligatorios', 'icono' => 'warning');
         } else {
             if ($id == "") {
-                $data = $this->model->registrarProducto($codigo, $nombre, $precio_compra, $precio_venta, $medida, $categoria, $name);
+                $data = $this->model->registrarProducto($codigo, $nombre, $precio_compra, $precio_venta, $iva, $medida, $categoria, $name);
                 if ($data == "ok") {
                     $msg = array('msg' => 'Producto registrado con éxito', 'icono' => 'success');
                     move_uploaded_file($tmpname, $destino);
@@ -79,7 +83,7 @@ class Productos extends Controller
                             unlink($destino . $imgDelete['foto']);
                         }
                     }
-                    $data = $this->model->modificarProducto($codigo, $nombre, $precio_compra, $precio_venta, $medida, $categoria, $name, $id);
+                    $data = $this->model->modificarProducto($codigo, $nombre, $precio_compra, $precio_venta, $iva, $medida, $categoria, $name, $id);
                     if ($data == "modificado") {
                         move_uploaded_file($tmpname, $destino);
                         $msg = array('msg' => 'Producto modificado con éxito', 'icono' => 'success');
@@ -89,6 +93,7 @@ class Productos extends Controller
                 }
             }
         }
+
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();
     }

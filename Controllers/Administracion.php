@@ -30,12 +30,13 @@ class Administracion extends Controller
     }
     public function modificar()
     {
+        $ruc = $_POST['ruc'];
         $nombre = $_POST['nombre'];
         $tel = $_POST['telefono'];
         $dir = $_POST['direccion'];
         $mensaje = $_POST['mensaje'];
         $id = $_POST['id'];
-        $data = $this->model->modificar($nombre, $tel, $dir, $mensaje, $id);
+        $data = $this->model->modificar($ruc, $nombre, $tel, $dir, $mensaje, $id);
         if ($data == "ok") {
             $msg = "ok";
         } else {

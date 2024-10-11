@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 24-08-2024 a las 20:10:49
+-- Servidor: localhost
+-- Tiempo de generación: 05-10-2024 a las 00:49:13
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -61,7 +61,7 @@ CREATE TABLE `categorias` (
 
 INSERT INTO `categorias` (`id`, `nombre`, `estado`) VALUES
 (1, 'Café', 1),
-(2, 'Carne', 1),
+(2, 'Carne', 0),
 (3, 'Chocolate', 1),
 (4, 'Refresco', 1),
 (5, 'Fruta', 1);
@@ -141,7 +141,12 @@ INSERT INTO `compras` (`id`, `id_producto`, `total`, `fecha`, `estado`) VALUES
 (5, 0, 20.00, '2024-08-19 23:50:45', 0),
 (6, 0, 62.00, '2024-08-19 23:12:39', 1),
 (7, 0, 260.00, '2024-08-19 22:47:07', 1),
-(8, 0, 120.00, '2024-08-19 23:11:46', 1);
+(8, 0, 120.00, '2024-08-19 23:11:46', 1),
+(9, 0, 550.00, '2024-09-24 17:29:53', 1),
+(10, 0, 40.00, '2024-10-01 14:40:41', 1),
+(11, 0, 200.00, '2024-10-01 14:44:39', 1),
+(12, 0, 280.00, '2024-10-01 17:21:10', 1),
+(13, 0, 203.00, '2024-10-01 22:58:34', 1);
 
 -- --------------------------------------------------------
 
@@ -213,7 +218,17 @@ INSERT INTO `detalle_compras` (`id`, `id_compra`, `id_producto`, `cantidad`, `pr
 (11, 7, 6, 20, 2.00, 40.00),
 (12, 7, 5, 50, 2.00, 100.00),
 (13, 8, 5, 10, 2.00, 20.00),
-(14, 8, 6, 50, 2.00, 100.00);
+(14, 8, 6, 50, 2.00, 100.00),
+(15, 9, 7, 75, 2.00, 150.00),
+(16, 9, 5, 100, 2.00, 200.00),
+(17, 9, 6, 100, 2.00, 200.00),
+(18, 10, 7, 20, 2.00, 40.00),
+(19, 11, 5, 50, 2.00, 100.00),
+(20, 11, 6, 50, 2.00, 100.00),
+(21, 12, 10, 20, 7.00, 140.00),
+(22, 12, 11, 20, 2.00, 40.00),
+(23, 12, 8, 20, 5.00, 100.00),
+(24, 13, 10, 25, 7.00, 175.00);
 
 -- --------------------------------------------------------
 
@@ -245,7 +260,9 @@ INSERT INTO `detalle_permisos` (`id`, `id_usuario`, `id_permiso`) VALUES
 (78, 7, 11),
 (79, 7, 12),
 (81, 9, 11),
-(91, 8, 5);
+(92, 8, 5),
+(93, 8, 8),
+(94, 8, 9);
 
 -- --------------------------------------------------------
 
@@ -262,13 +279,6 @@ CREATE TABLE `detalle_temp` (
   `descuento` decimal(10,2) NOT NULL DEFAULT 0.00,
   `sub_total` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
---
--- Volcado de datos para la tabla `detalle_temp`
---
-
-INSERT INTO `detalle_temp` (`id`, `id_producto`, `id_usuario`, `precio`, `cantidad`, `descuento`, `sub_total`) VALUES
-(26, 5, 1, 2.00, 50, 0.00, 100.00);
 
 -- --------------------------------------------------------
 
@@ -303,7 +313,9 @@ INSERT INTO `detalle_venta` (`id`, `id_venta`, `id_producto`, `cantidad`, `descu
 (10, 16, 4, 10, 0.00, 2.00, 20.00),
 (11, 17, 4, 20, 0.00, 2.00, 40.00),
 (12, 18, 7, 20, 0.00, 2.00, 40.00),
-(13, 19, 5, 5, 0.00, 2.00, 10.00);
+(13, 19, 5, 5, 0.00, 2.00, 10.00),
+(14, 20, 7, 20, 0.00, 2.00, 40.00),
+(15, 20, 5, 20, 0.00, 2.00, 40.00);
 
 -- --------------------------------------------------------
 
@@ -359,7 +371,8 @@ INSERT INTO `permisos` (`id`, `permiso`) VALUES
 (11, 'nueva_venta'),
 (12, 'historial_venta'),
 (13, 'eliminar_clientes'),
-(14, 'registrar_clientes');
+(14, 'registrar_clientes'),
+(15, 'impuestos');
 
 -- --------------------------------------------------------
 
@@ -373,6 +386,7 @@ CREATE TABLE `productos` (
   `descripcion` varchar(250) NOT NULL,
   `precio_compra` decimal(10,2) NOT NULL,
   `precio_venta` decimal(10,2) NOT NULL,
+  `iva` varchar(15) NOT NULL,
   `cantidad` int(11) NOT NULL DEFAULT 0,
   `foto` varchar(50) NOT NULL,
   `id_medida` int(11) NOT NULL,
@@ -384,12 +398,16 @@ CREATE TABLE `productos` (
 -- Volcado de datos para la tabla `productos`
 --
 
-INSERT INTO `productos` (`id`, `codigo`, `descripcion`, `precio_compra`, `precio_venta`, `cantidad`, `foto`, `id_medida`, `id_categoria`, `estado`) VALUES
-(2, 'J-32594', 'Jugo', 2.00, 2.00, 23, 'default.png', 5, 4, 1),
-(4, 'J-464576', 'Cocacola', 2.00, 2.00, -30, 'Cocacola.jpg', 5, 4, 1),
-(5, '02', 'San Salvador', 2.00, 2.00, 76, 'SanSalvador.jpg', 1, 1, 1),
-(6, '03', 'Zulia', 2.00, 2.00, 100, 'zulia.jpg', 1, 1, 1),
-(7, '01', 'Refresco', 2.00, 2.00, 51, 'default.png', 5, 4, 1);
+INSERT INTO `productos` (`id`, `codigo`, `descripcion`, `precio_compra`, `precio_venta`, `iva`, `cantidad`, `foto`, `id_medida`, `id_categoria`, `estado`) VALUES
+(2, 'J-32594', 'Jugo', 2.00, 2.00, 'Aplica', 23, 'default.png', 5, 4, 1),
+(4, 'J-464576', 'Cocacola', 2.00, 2.00, 'Exento', -30, 'default.png', 5, 4, 1),
+(5, '02', 'San Salvador', 2.00, 2.00, 'Aplica', 206, 'default.png', 1, 1, 1),
+(6, '03', 'Zulia', 2.00, 2.00, 'Exento', 250, 'default.png', 1, 1, 1),
+(7, '01', 'Refresco', 2.00, 2.00, 'Aplica', 126, 'default.png', 5, 4, 1),
+(8, '04', 'Jugo', 5.00, 5.00, 'Aplica', 20, 'default.png', 1, 1, 1),
+(9, '05', 'Galleta', 3.00, 3.00, 'Exento', 0, 'default.png', 1, 1, 1),
+(10, '06', 'Pizza', 7.00, 7.00, 'Aplica', 45, 'default.png', 1, 1, 1),
+(11, '07', 'Hamburguesa', 2.00, 2.00, 'Aplica', 20, 'default.png', 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -446,7 +464,8 @@ INSERT INTO `ventas` (`id`, `id_usuario`, `id_cliente`, `id_producto`, `total`, 
 (16, 7, 1, 0, 20.00, '2024-08-15 00:51:32', 1, 0),
 (17, 7, 1, 0, 40.00, '2024-08-15 01:00:55', 1, 0),
 (18, 1, 1, 0, 40.00, '2024-08-18 19:24:46', 1, 1),
-(19, 1, 1, 0, 10.00, '2024-08-18 22:55:21', 1, 1);
+(19, 1, 1, 0, 10.00, '2024-08-18 22:55:21', 1, 1),
+(20, 1, 1, 0, 0.00, '2024-10-01 23:07:11', 1, 1);
 
 --
 -- Índices para tablas volcadas
@@ -582,7 +601,7 @@ ALTER TABLE `clientes`
 -- AUTO_INCREMENT de la tabla `compras`
 --
 ALTER TABLE `compras`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `configuracion`
@@ -594,31 +613,31 @@ ALTER TABLE `configuracion`
 -- AUTO_INCREMENT de la tabla `detalle`
 --
 ALTER TABLE `detalle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_compras`
 --
 ALTER TABLE `detalle_compras`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_permisos`
 --
 ALTER TABLE `detalle_permisos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_temp`
 --
 ALTER TABLE `detalle_temp`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `medidas`
@@ -630,13 +649,13 @@ ALTER TABLE `medidas`
 -- AUTO_INCREMENT de la tabla `permisos`
 --
 ALTER TABLE `permisos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
@@ -648,7 +667,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- Restricciones para tablas volcadas

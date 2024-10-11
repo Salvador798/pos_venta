@@ -44,9 +44,25 @@ class ComprasModel extends Query
     }
     public function calcularCompra(string $table, int $id_usuario)
     {
-        $sql = "SELECT sub_total, SUM(sub_total) AS total FROM $table WHERE id_usuario = '$id_usuario'";
-        $data = $this->select($sql);
-        return $data;
+        $sql = "SELECT d.sub_total, p.iva FROM $table d INNER JOIN productos p ON d.id_producto = p.id WHERE id_usuario = '$id_usuario'";
+        $data = $this->selectAll($sql);
+
+        $impuesto = 0.16;
+        $exento = 0;
+        $aplica = 0;
+
+        foreach ($data as $row) {
+            if ($row['iva'] === 'Exento') {
+                $exento += $row['sub_total'];
+            } else if ($row['iva'] === 'Aplica') {
+                $aplica += $row['sub_total'];
+            }
+        }
+
+        $iva = ($aplica * $impuesto);
+        $total = $exento + ($aplica + $iva);
+
+        return $total;
     }
     public function deleteDetalle(string $table, int $id)
     {
@@ -140,13 +156,13 @@ class ComprasModel extends Query
     }
     public function getProCompra(int $id_compra)
     {
-        $sql = "SELECT c.*, d.*, p.id, p.descripcion FROM compras c INNER JOIN detalle_compras d ON c.id = d.id_compra INNER JOIN productos p ON p.id = d.id_producto WHERE c.id = $id_compra";
+        $sql = "SELECT c.*, d.*, p.id, p.descripcion, p.iva FROM compras c INNER JOIN detalle_compras d ON c.id = d.id_compra INNER JOIN productos p ON p.id = d.id_producto WHERE c.id = $id_compra";
         $data = $this->selectAll($sql);
         return $data;
     }
     public function getProVenta(int $id_venta)
     {
-        $sql = "SELECT v.*, d.*, p.id, p.descripcion FROM ventas v INNER JOIN detalle_venta d ON v.id = d.id_venta INNER JOIN productos p ON p.id = d.id_producto WHERE v.id = $id_venta";
+        $sql = "SELECT v.*, d.*, p.id, p.descripcion, p.iva FROM ventas v INNER JOIN detalle_venta d ON v.id = d.id_venta INNER JOIN productos p ON p.id = d.id_producto WHERE v.id = $id_venta";
         $data = $this->selectAll($sql);
         return $data;
     }

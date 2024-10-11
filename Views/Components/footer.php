@@ -1,9 +1,9 @@
 </div>
 </main>
-<footer class="py-4 bg-light mt-auto">
+<footer class="py-1 bg-light mt-3">
     <div class="container-fluid px-4">
         <div class="d-flex align-items-center justify-content-between small">
-            <div class="text-muted">Copyright &copy; Your Website 2023</div>
+            <div class="text-muted">Copyright &copy; Jesús Martinez</div>
             <div>
                 <a href="#">Privacy Policy</a>
                 &middot;
@@ -14,14 +14,14 @@
 </footer>
 </div>
 </div>
-<div id="cambiarPass" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="my-modal-title" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div id="cambiarPass" class="modal fade" tabindex="-1" role="dialog" aria-bs-labelledby="my-modal-title" aria-bs-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header bg-dark text-white">
                 <h5 class="modal-title">Cambiar Contraseña</h5>
-                <button class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <!-- <button class="close text-white" data-bs-dismiss="modal" aria-bs-label="Close">
+                    <span aria-bs-hidden="true">&times;</span>
+                </button> -->
             </div>
             <div class="modal-body">
                 <form id="frmCambiarPass" onsubmit="frmCambiarPass(event);">
