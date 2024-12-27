@@ -1,33 +1,48 @@
 <?php
-require_once 'Config/Config.php';
-$ruta = !empty($_GET['url']) ? $_GET['url'] : "Home/index";
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/config/config.php'; // Incluir el archivo de configuración
+require __DIR__ . '/config/helpers.php'; // Incluir el archivo de ayuda
+
+$ruta = !empty($_GET['url']) ? $_GET['url'] : "home/index";
 $array = explode("/", $ruta);
-$controller = $array[0];
+$controller = ucfirst($array[0]) . 'Controller'; // Añadir el sufijo 'Controller'
 $metodo = "index";
 $parametro = "";
+
 if (!empty($array[1])) {
-    if (!empty($array[1] != "")) {
+    if ($array[1] != "") {
         $metodo = $array[1];
     }
 }
 if (!empty($array[2])) {
-    if (!empty($array[2] != "")) {
+    if ($array[2] != "") {
+        $parametro = "";
         for ($i = 2; $i < count($array); $i++) {
             $parametro .= $array[$i] . ",";
         }
         $parametro = trim($parametro, ",");
     }
 }
-require_once "Config/App/autoload.php";
-$dirControllers = "Controllers/" . $controller . ".php";
-if (file_exists($dirControllers)) {
-    require_once $dirControllers;
+
+// Asegúrate de que $controller esté definido
+if (!isset($controller)) {
+    echo "Controlador no definido";
+    exit;
+}
+
+// Cargar el controlador y método
+$controller = "App\\Controllers\\" . $controller;
+if (class_exists($controller)) {
     $controller = new $controller();
     if (method_exists($controller, $metodo)) {
-        $controller->$metodo($parametro);
+        $controller->{$metodo}($parametro);
     } else {
-        header('location: ' . APP_URL . 'Errors');
+        echo "Método no encontrado";
     }
 } else {
-    header('location: ' . APP_URL . 'Errors');
+    echo "Controlador no encontrado";
 }

@@ -1,7 +1,8 @@
 <?php
-const APP_URL = "http://localhost/pos_venta/";
-const DB_SERVER = "localhost";
-const DB_USER = "root";
-const DB_PASS = "";
-const DB_NAME = "sistema";
-const DB_CHARSET = "charset-utf8";
+
+define('APP_URL',  'http://localhost/pos_venta/');
+define('DB_SERVER', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'sistema');
+define('DB_CHARSET', 'charset-utf8');
