@@ -75,7 +75,7 @@
             <label for="total" class="font-weight-bold">Total</label>
             <input id="total" class="form-control" type="text" name="total" placeholder="Total" disabled>
             <button class="btn btn-primary mt-2 btn-block" type="button" onclick="procesar(0)">Generar Venta</button>
-            <a href="<?php echo APP_URL; ?>Compras/historial_ventas" class="btn btn-warning mt-2 btn-block" type="button">Historial de las Ventas</a>
+            <a href="<?php echo APP_URL; ?>shopping/historialSales" class="btn btn-warning mt-2 btn-block" type="button">Historial de las Ventas</a>
 
         </div>
     </div>

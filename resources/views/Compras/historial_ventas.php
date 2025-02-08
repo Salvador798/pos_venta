@@ -1,19 +1,19 @@
 <?php include "resources/views/Components/header.php"; ?>
 <br>
-<form action="<?php echo APP_URL; ?>Compras/pdf" method="POST" target="_blank">
+<form action="<?php echo APP_URL; ?>shopping/pdfSale" method="POST" target="_blank">
     <div class="row">
         <div class="col-md-3">
             <div class="mb-3">
                 <label for="min">Desde</label>
-                <input type="date" value="<?php date_default_timezone_set('America/Caracas');
-                                            echo date('Y-m-d'); ?>" name="desde" id="min">
+                <input type="date" name="desde" id="min" value="<?php date_default_timezone_set('America/Caracas');
+                                                                echo date('Y-m-d'); ?>">
             </div>
         </div>
         <div class="col-md-3">
             <div class="mb-3">
                 <label for="hasta">hasta</label>
-                <input type="date" value="<?php date_default_timezone_set('America/Caracas');
-                                            echo date('Y-m-d'); ?>" name="hasta" id="hasta">
+                <input type="date" name="hasta" id="hasta" value="<?php date_default_timezone_set('America/Caracas');
+                                                                    echo date('Y-m-d'); ?>">
             </div>
         </div>
         <div class="col-md-3">

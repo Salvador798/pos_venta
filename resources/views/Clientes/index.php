@@ -45,7 +45,7 @@
                         <textarea id="direccion" class="form-control" name="direccion" placeholder="Dirección" rows="3"></textarea>
                         <label for="direccion">Dirección</label>
                     </div>
-                    <button class="btn btn-primary" type="button" onclick="registrarCli(event);" id="btnAccion">Agregar</button>
+                    <button class="btn btn-primary" type="button" onclick="registerCli(event);" id="btnAccion">Agregar</button>
                     <button class="btn btn-danger" type="button" data-bs-dismiss="modal">Cancelar</button>
                 </form>
             </div>

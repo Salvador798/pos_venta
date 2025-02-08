@@ -14,14 +14,14 @@
 </footer>
 </div>
 </div>
-<div id="cambiarPass" class="modal fade" tabindex="-1" role="dialog" aria-bs-labelledby="my-modal-title" aria-bs-hidden="true">
+<div id="cambiarPass" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-bs-labelledby="my-modal-title" aria-bs-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header bg-dark text-white">
                 <h5 class="modal-title">Cambiar Contraseña</h5>
-                <!-- <button class="close text-white" data-bs-dismiss="modal" aria-bs-label="Close">
+                <button class="close text-white" data-bs-dismiss="modal" aria-bs-label="Close">
                     <span aria-bs-hidden="true">&times;</span>
-                </button> -->
+                </button>
             </div>
             <div class="modal-body">
                 <form id="frmCambiarPass" onsubmit="frmCambiarPass(event);">
@@ -53,7 +53,10 @@
 <script src="<?php echo APP_URL; ?>public/js/sweetalert2.all.min.js"></script>
 <script src="<?php echo APP_URL; ?>public/js/select2.min.js"></script>
 <script src="<?php echo APP_URL; ?>public/js/chart.min.js"></script>
-<script src="<?php echo APP_URL; ?>public/js/funciones.js"></script>
+<!-- <script src="<?php echo APP_URL; ?>public/js/funciones.js"></script> -->
+<script type="module" src="<?php echo APP_URL; ?>resources/js/main.js"></script>
+<script src="<?php echo APP_URL; ?>resources/js/alerts.js"></script>
+<script src="<?php echo APP_URL; ?>resources/js/date.js"></script>
 </body>
 
 </html>

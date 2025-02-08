@@ -12,21 +12,24 @@ class Medidas extends Model
     {
         parent::__construct();
     }
-    public function getMedidas()
+
+    public static function getMedidas()
     {
         $sql = "SELECT * FROM medidas";
-        $data = $this->selectAll($sql);
+        $data = self::selectAll($sql);
         return $data;
     }
-    public function registrarMedidas(string $nombre)
+
+    public static function registrarMedidas(string $nombre)
     {
-        $this->nombre = $nombre;
-        $verificar = "SELECT * FROM medidas WHERE nombre = '$this->nombre'";
-        $existe = $this->select($verificar);
+        $verificar = "SELECT * FROM medidas WHERE nombre = '$nombre'";
+        $existe = self::select($verificar);
+
         if (empty($existe)) {
             $sql = "INSERT INTO medidas (nombre) VALUES (?)";
-            $datos = array($this->nombre);
-            $data = $this->save($sql, $datos);
+            $datos = array($nombre);
+            $data = self::save($sql, $datos);
+
             if ($data == 1) {
                 $res = "ok";
             } else {
@@ -35,42 +38,44 @@ class Medidas extends Model
         } else {
             $res = "existe";
         }
+
         return $res;
     }
-    public function modificarMedidas(string $nombre, int $id)
+
+    public static function modificarMedidas(string $nombre, int $id)
     {
-        $this->nombre = $nombre;
-        $this->id = $id;
         $sql = "UPDATE medidas SET nombre = ? WHERE id = ?";
-        $datos = array($this->nombre, $this->id);
-        $data = $this->save($sql, $datos);
+        $datos = array($nombre, $id);
+        $data = self::save($sql, $datos);
+
         if ($data == 1) {
             $res = "modificado";
         } else {
             $res = "error";
         }
+
         return $res;
     }
-    public function editarMed(int $id)
+
+    public static function editarMed(int $id)
     {
         $sql = "SELECT * FROM medidas WHERE id = $id";
-        $data = $this->select($sql);
-        return $data;
-    }
-    public function accionMed(int $estado, int $id)
-    {
-        $this->id = $id;
-        $this->estado = $estado;
-        $sql = "UPDATE medidas SET estado = ? WHERE id = ?";
-        $datos = array($this->estado, $this->id);
-        $data = $this->save($sql, $datos);
+        $data = self::select($sql);
         return $data;
     }
 
-    public function verificarPermiso(int $id_user, string $nombre)
+    public static function accionMed(int $estado, int $id)
+    {
+        $sql = "UPDATE medidas SET estado = ? WHERE id = ?";
+        $datos = array($estado, $id);
+        $data = self::save($sql, $datos);
+        return $data;
+    }
+
+    public static function verificarPermiso(int $id_user, string $nombre)
     {
         $sql = "SELECT p.id, p.permiso, d.id, d.id_usuario, d.id_permiso FROM permisos p INNER JOIN detalle_permisos d on p.id = d.id_permiso WHERE d.id_usuario = $id_user AND p.permiso = '$nombre'";
-        $data = $this->selectAll($sql);
+        $data = self::selectAll($sql);
         return $data;
     }
 }

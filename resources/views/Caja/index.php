@@ -31,7 +31,7 @@
                         <label for="caja">Nombre</label>
                     </div>
                     <br>
-                    <button class="btn btn-primary" type="button" onclick="registrarCaj(event);" id="btnAccion">Agregar</button>
+                    <button class="btn btn-primary" type="button" onclick="registerCaj(event);" id="btnAccion">Agregar</button>
                     <button class="btn btn-danger" type="button" data-bs-dismiss="modal">Cancelar</button>
                 </form>
             </div>

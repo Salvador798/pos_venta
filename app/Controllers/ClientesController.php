@@ -21,37 +21,37 @@ class ClientesController extends Controller
     public function index()
     {
         $id_user = $_SESSION['id_usuario'];
-        $verificar = $this->model->verificarPermiso($id_user, 'clientes');
+        $verificar = Clientes::verificarPermiso($id_user, 'clientes');
         if (!empty($verificar) || $id_user == 1) {
             echo view("Clientes/index");
         } else {
             header('location: ' . APP_URL . 'Errors/permisos');
         }
     }
-    public function listar()
+    public function list()
     {
-        $data = $this->model->getClientes();
+        $data = Clientes::getClientes();
         for ($i = 0; $i < count($data); $i++) {
             if ($data[$i]['estado'] == 1) {
                 $data[$i]['estado'] = '<span class="badge badge-success">Activo</span>';
                 $data[$i]['acciones'] = '<div>
-                <button class="btn btn-primary" type="button" onclick="btnEditarCli(' . $data[$i]['id'] . ');"><i class="fas fa-edit"></i></button>
-                <button class="btn btn-danger" type="button" onclick=" btnEliminarCli(' . $data[$i]['id'] . ');"><i class="fa-solid fa-lock"></i></button>
+                <button class="btn btn-primary" type="button" onclick="edditCli(' . $data[$i]['id'] . ');"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-danger" type="button" onclick=" desactiveCli(' . $data[$i]['id'] . ');"><i class="fa-solid fa-lock"></i></button>
                 </div>';
             } else {
                 $data[$i]['estado'] = '<span class="badge badge-danger">Inactivo</span>';
                 $data[$i]['acciones'] = '<div>
-                <button class="btn btn-success" type="button" onclick=" btnReingresarCli(' . $data[$i]['id'] . ');"><i class="fa-solid fa-unlock"></i></button>
+                <button class="btn btn-success" type="button" onclick=" activeCli(' . $data[$i]['id'] . ');"><i class="fa-solid fa-unlock"></i></button>
                 </div>';
             }
         }
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die();
     }
-    public function registrar()
+    public function store()
     {
         $id_user = $_SESSION['id_usuario'];
-        $verificar = $this->model->verificarPermiso($id_user, 'registrar_clientes');
+        $verificar = Clientes::verificarPermiso($id_user, 'registrar_clientes');
         if (!empty($verificar) || $id_user == 1) {
             $dni = $_POST['dni'];
             $nombre = $_POST['nombre'];
@@ -62,7 +62,7 @@ class ClientesController extends Controller
                 $msg = array('msg' => 'Todos los campos son obligatorios', 'icono' => 'warning');
             } else {
                 if ($id == "") {
-                    $data = $this->model->registrarCliente($dni, $nombre, $telefono, $direccion);
+                    $data = Clientes::registrarCliente($dni, $nombre, $telefono, $direccion);
                     if ($data == "ok") {
                         $msg = array('msg' => 'Cliente registrado con éxito', 'icono' => 'success');
                     } else if ($data == "existe") {
@@ -71,7 +71,7 @@ class ClientesController extends Controller
                         $msg = array('msg' => 'Error al registrar el Cliente', 'icono' => 'error');
                     }
                 } else {
-                    $data = $this->model->modificarCliente($dni, $nombre, $telefono, $direccion, $id);
+                    $data = Clientes::modificarCliente($dni, $nombre, $telefono, $direccion, $id);
                     if ($data == "modificado") {
                         $msg = array('msg' => 'Cliente modificado con éxito', 'icono' => 'success');
                     } else {
@@ -85,30 +85,30 @@ class ClientesController extends Controller
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();
     }
-    public function editar(int $id)
+    public function edit(int $id)
     {
-        $data = $this->model->editarCli($id);
+        $data = Clientes::editarCli($id);
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die();
     }
-    public function eliminar(int $id)
+    public function desactive(int $id)
     {
-        $data = $this->model->accionCli(0, $id);
+        $data = Clientes::accionCli(0, $id);
         if ($data == 1) {
-            $msg = array('msg' => 'Cliente desactivado', 'icono' => 'success');
+            $msg = array('msg' => 'Cliente desactivado', 'icon' => 'success');
         } else {
-            $msg = array('msg' => 'Error al desactivar el cliente', 'icono' => 'error');
+            $msg = array('msg' => 'Error al desactivar el cliente', 'icon' => 'error');
         }
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();
     }
-    public function reingresar(int $id)
+    public function active(int $id)
     {
-        $data = $this->model->accionCli(1, $id);
+        $data = Clientes::accionCli(1, $id);
         if ($data == 1) {
-            $msg = array('msg' => 'Cliente activado', 'icono' => 'success');
+            $msg = array('msg' => 'Cliente activado', 'icon' => 'success');
         } else {
-            $msg = array('msg' => 'Error al activar el cliente', 'icono' => 'error');
+            $msg = array('msg' => 'Error al activar el cliente', 'icon' => 'error');
         }
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();

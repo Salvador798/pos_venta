@@ -58,7 +58,7 @@
                         </select>
                         <label for="caja">Caja</label>
                     </div>
-                    <button class="btn btn-primary" type="button" onclick="registrarUser(event);" id="btnAccion">Agregar</button>
+                    <button class="btn btn-primary" type="button" onclick="registerUser(event);" id="btnAccion">Agregar</button>
                     <button class="btn btn-danger" type="button" data-bs-dismiss="modal">Cancelar</button>
                 </form>
             </div>

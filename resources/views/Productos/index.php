@@ -105,7 +105,7 @@
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-primary" type="button" onclick="registrarPro(event);" id="btnAccion">Agregar</button>
+                    <button class="btn btn-primary" type="button" onclick="registerPro(event);" id="btnAccion">Agregar</button>
                     <button class="btn btn-danger" type="button" data-bs-dismiss="modal">Cancelar</button>
                 </form>
             </div>

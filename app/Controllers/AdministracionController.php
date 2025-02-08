@@ -7,21 +7,22 @@ use App\Models\Administracion;
 
 class AdministracionController extends Controller
 {
-    protected $model;
-
     public function __construct()
     {
         session_start();
+
         if (empty($_SESSION['activo'])) {
             header("location: " . APP_URL);
         }
+
         parent::__construct();
         $this->model = new Administracion();
     }
     public function index()
     {
         $id_user = $_SESSION['id_usuario'];
-        $verificar = $this->model->verificarPermiso($id_user, 'configuracion');
+        $verificar = Administracion::verificarPermiso($id_user, 'configuracion');
+
         if (!empty($verificar) || $id_user == 1) {
             $data = $this->model->getEmpresa();
             echo view('Administracion/index', $data);
@@ -31,22 +32,22 @@ class AdministracionController extends Controller
     }
     public function home($parametro = "")
     {
-        $data['usuarios'] = $this->model->getDatos('usuarios');
-        $data['clientes'] = $this->model->getDatos('clientes');
-        $data['productos'] = $this->model->getDatos('productos');
-        $data['ventas'] = $this->model->getVentas();
+        $data['usuarios'] = Administracion::getDatos('usuarios');
+        $data['clientes'] = Administracion::getDatos('clientes');
+        $data['productos'] = Administracion::getDatos('productos');
+        $data['ventas'] = Administracion::getVentas();
+
         echo view("Administracion/home", $data);
     }
-    public function modificar()
+    public function modify()
     {
-        $ruc = $_POST['ruc'];
+        $rif = $_POST['rif'];
         $nombre = $_POST['nombre'];
         $tel = $_POST['telefono'];
         $dir = $_POST['direccion'];
-        $mensaje = $_POST['mensaje'];
         $id = $_POST['id'];
 
-        $data = $this->model->modificar($ruc, $nombre, $tel, $dir, $mensaje, $id);
+        $data = Administracion::modificar($rif, $nombre, $tel, $dir, $id);
         if ($data == "ok") {
             $msg = "ok";
         } else {
@@ -57,16 +58,16 @@ class AdministracionController extends Controller
         die();
     }
 
-    public function reporteStock()
+    public function reportStock()
     {
-        $data = $this->model->getStockMinimo();
+        $data = Administracion::getStockMinimo();
         echo json_encode($data);
         die();
     }
 
-    public function productosVendidos()
+    public function productsSold()
     {
-        $data = $this->model->getProductosVendidos();
+        $data = Administracion::getProductosVendidos();
         echo json_encode($data);
         die();
     }

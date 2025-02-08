@@ -66,7 +66,7 @@
                 Productos más vendidos
             </div>
             <div class="card-body">
-                <canvas id="productosVendidos" width="400" height="400"></canvas>
+                <canvas id="productsSold" width="400" height="400"></canvas>
             </div>
         </div>
     </div>

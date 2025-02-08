@@ -280,14 +280,14 @@ class Compras extends Model
 
     public function getRangoFechas(string $desde, string $hasta)
     {
-        $sql = "SELECT c.id, c.nombre, p.id, p.descripcion, v.* FROM clientes c INNER JOIN ventas v ON v.id_cliente = c.id INNER JOIN productos p ON v.id_producto = p.descripcion WHERE v.fecha BETWEEN '$desde' AND '$hasta'";
+        $sql = "SELECT c.id, c.nombre, v.* FROM clientes c INNER JOIN ventas v ON v.id_cliente = c.id WHERE v.fecha BETWEEN '$desde' AND '$hasta'";
         $data = $this->selectAll($sql);
         return $data;
     }
 
     public function getRangoFechasCompra(string $desde, string $hasta)
     {
-        $sql = "SELECT p.id, p.descripcion, c.* FROM productos p INNER JOIN compras c ON c.id_producto = p.descripcion WHERE c.fecha BETWEEN '$desde' AND '$hasta'";
+        $sql = "SELECT * FROM compras WHERE fecha BETWEEN '$desde' AND '$hasta'";
         $data = $this->selectAll($sql);
         return $data;
     }

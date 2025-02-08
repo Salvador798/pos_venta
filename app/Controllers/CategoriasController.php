@@ -7,8 +7,6 @@ use App\Models\Categorias;
 
 class CategoriasController extends Controller
 {
-    protected $model;
-
     public function __construct()
     {
         session_start();
@@ -21,85 +19,89 @@ class CategoriasController extends Controller
     public function index()
     {
         $id_user = $_SESSION['id_usuario'];
-        $verificar = $this->model->verificarPermiso($id_user, 'categorias');
+        $verificar = Categorias::verificarPermiso($id_user, 'categorias');
         if (!empty($verificar) || $id_user == 1) {
             echo view("Categorias/index");
         } else {
             header('location: ' . APP_URL . 'Errors/permisos');
         }
     }
-    public function listar()
+    public function list()
     {
-        $data = $this->model->getCategorias();
+        $data = Categorias::getCategorias();
         for ($i = 0; $i < count($data); $i++) {
             if ($data[$i]['estado'] == 1) {
                 $data[$i]['estado'] = '<span class="badge badge-success">Activo</span>';
                 $data[$i]['acciones'] = '<div>
-                <button class="btn btn-primary" type="button" onclick="btnEditarCat(' . $data[$i]['id'] . ');"><i class="fas fa-edit"></i></button>
-                <button class="btn btn-danger" type="button" onclick=" btnEliminarCat(' . $data[$i]['id'] . ');"><i class="fa-solid fa-lock"></i></button>
+                <button class="btn btn-primary" type="button" onclick="editCat(' . $data[$i]['id'] . ');"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-danger" type="button" onclick=" desactiveCat(' . $data[$i]['id'] . ');"><i class="fa-solid fa-lock"></i></button>
                 </div>';
             } else {
                 $data[$i]['estado'] = '<span class="badge badge-danger">Inactivo</span>';
                 $data[$i]['acciones'] = '<div>
-                <button class="btn btn-success" type="button" onclick=" btnReingresarCat(' . $data[$i]['id'] . ');"><i class="fa-solid fa-unlock"></i></button>
+                <button class="btn btn-success" type="button" onclick=" activeCat(' . $data[$i]['id'] . ');"><i class="fa-solid fa-unlock"></i></button>
                 </div>';
             }
         }
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die();
     }
-    public function registrar()
+    public function store()
     {
         $nombre = $_POST['nombre'];
         $id = $_POST['id'];
+
         if (empty($nombre)) {
-            $msg = array('msg' => 'Todos los campos son obligatorios', 'icono' => 'warning');
+            $msg = array('msg' => 'Todos los campos son obligatorios', 'icon' => 'warning');
         } else {
             if ($id == "") {
-                $data = $this->model->registrarCategorias($nombre);
+                $data = Categorias::registrarCategorias($nombre);
+
                 if ($data == "ok") {
-                    $msg = array('msg' => 'Categoria registrada con éxito', 'icono' => 'success');
+                    $msg = array('msg' => 'Categoria registrada con éxito', 'icon' => 'success');
                 } else if ($data == "existe") {
-                    $msg = array('msg' => 'La Categoria ya existe', 'icono' => 'warning');
+                    $msg = array('msg' => 'La Categoria ya existe', 'icon' => 'warning');
                 } else {
-                    $msg = array('msg' => 'Error al registrar la Categoria', 'icono' => 'error');
+                    $msg = array('msg' => 'Error al registrar la Categoria', 'icon' => 'error');
                 }
             } else {
-                $data = $this->model->modificarCategorias($nombre, $id);
+                $data = Categorias::modificarCategorias($nombre, $id);
+
                 if ($data == "modificado") {
-                    $msg = array('msg' => 'Categoria modificada con éxito', 'icono' => 'success');
+                    $msg = array('msg' => 'Categoria modificada con éxito', 'icon' => 'success');
                 } else {
-                    $msg = array('msg' => 'Error al modificar la Categoria', 'icono' => 'error');
+                    $msg = array('msg' => 'Error al modificar la Categoria', 'icon' => 'error');
                 }
             }
         }
+
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();
     }
-    public function editar(int $id)
+    public function edit(int $id)
     {
-        $data = $this->model->editarCat($id);
+        $data = Categorias::editarCat($id);
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die();
     }
-    public function eliminar(int $id)
+    public function desactive(int $id)
     {
-        $data = $this->model->accionCat(0, $id);
+        $data = Categorias::accionCat(0, $id);
         if ($data == 1) {
-            $msg = array('msg' => 'Categoria Desactivada', 'icono' => 'success');
+            $msg = array('msg' => 'Categoria Desactivada', 'icon' => 'success');
         } else {
-            $msg = array('msg' => 'Error al desactivar la Categoria', 'icono' => 'error');
+            $msg = array('msg' => 'Error al desactivar la Categoria', 'icon' => 'error');
         }
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();
     }
-    public function reingresar(int $id)
+    public function active(int $id)
     {
         $data = $this->model->accionCat(1, $id);
         if ($data == 1) {
-            $msg = array('msg' => 'Categoria activada', 'icono' => 'success');
+            $msg = array('msg' => 'Categoria activada', 'icon' => 'success');
         } else {
-            $msg = array('msg' => 'Error al activar la Categoria', 'icono' => 'error');
+            $msg = array('msg' => 'Error al activar la Categoria', 'icon' => 'error');
         }
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();

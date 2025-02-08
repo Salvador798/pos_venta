@@ -38,7 +38,7 @@ class ComprasController extends Controller
         }
     }
 
-    public function ventas()
+    public function sales()
     {
         $id_user = $_SESSION['id_usuario'];
         $verificar = $this->model->verificarPermiso($id_user, 'nueva_venta');
@@ -49,7 +49,7 @@ class ComprasController extends Controller
             header('location: ' . APP_URL . 'Errors/permisos');
         }
     }
-    public function historial_ventas()
+    public function historialSales()
     {
         $id_user = $_SESSION['id_usuario'];
         $verificar = $this->model->verificarPermiso($id_user, 'historial_venta');
@@ -60,13 +60,13 @@ class ComprasController extends Controller
         }
     }
 
-    public function buscarCodigo($cod)
+    public function searchCode($cod)
     {
         $data = $this->model->getProCod($cod);
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die();
     }
-    public function ingresar()
+    public function getInto()
     {
         $id = $_POST["id"];
         $datos = $this->model->getProductos($id);
@@ -79,24 +79,24 @@ class ComprasController extends Controller
             $sub_total = $precio * $cantidad;
             $data = $this->model->registrarDetalle('detalle', $id_producto, $id_usuario, $precio, $cantidad, $sub_total);
             if ($data == "ok") {
-                $msg = array('msg' => 'Producto ingresado a la compra', 'icono' => 'success');
+                $msg = array('msg' => 'Producto ingresado a la compra', 'icon' => 'success');
             } else {
-                $msg = array('msg' => 'Error al ingresar el producto a la compra', 'icono' => 'error');
+                $msg = array('msg' => 'Error al ingresar el producto a la compra', 'icon' => 'error');
             }
         } else {
             $total_cantidad = $comprobar['cantidad'] + $cantidad;
             $sub_total = $total_cantidad * $precio;
             $data = $this->model->actualizarDetalle('detalle', $precio, $total_cantidad, $sub_total, $id_producto, $id_usuario,);
             if ($data == "modificado") {
-                $msg = array('msg' => 'Producto actualizado', 'icono' => 'success');
+                $msg = array('msg' => 'Producto actualizado', 'icon' => 'success');
             } else {
-                $msg = array('msg' => 'Error al actualizar el producto a la compra', 'icono' => 'error');
+                $msg = array('msg' => 'Error al actualizar el producto a la compra', 'icon' => 'error');
             }
         }
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();
     }
-    public function ingresarVenta()
+    public function enterSale()
     {
         $id = $_POST["id"];
         $datos = $this->model->getProductos($id);
@@ -110,31 +110,31 @@ class ComprasController extends Controller
                 $sub_total = $precio * $cantidad;
                 $data = $this->model->registrarDetalle('detalle_temp', $id_producto, $id_usuario, $precio, $cantidad, $sub_total);
                 if ($data == "ok") {
-                    $msg = array('msg' => 'Producto ingresado a la venta', 'icono' => 'success');
+                    $msg = array('msg' => 'Producto ingresado a la venta', 'icon' => 'success');
                 } else {
-                    $msg = array('msg' => 'Error al ingresar el producto a la venta', 'icono' => 'error');
+                    $msg = array('msg' => 'Error al ingresar el producto a la venta', 'icon' => 'error');
                 }
             } else {
-                $msg = array('msg' => 'Stock disponible ' . $datos['cantidad'], 'icono' => 'warning');
+                $msg = array('msg' => 'Stock disponible ' . $datos['cantidad'], 'icon' => 'warning');
             }
         } else {
             $total_cantidad = $comprobar['cantidad'] + $cantidad;
             $sub_total = $total_cantidad * $precio;
             if ($datos['cantidad'] < $total_cantidad) {
-                $msg = array('msg' => 'Stock no disponible', 'icono' => 'warning');
+                $msg = array('msg' => 'Stock no disponible', 'icon' => 'warning');
             } else {
                 $data = $this->model->actualizarDetalle('detalle_temp', $precio, $total_cantidad, $sub_total, $id_producto, $id_usuario,);
                 if ($data == "modificado") {
-                    $msg = array('msg' => 'Producto actualizado', 'icono' => 'success');
+                    $msg = array('msg' => 'Producto actualizado', 'icon' => 'success');
                 } else {
-                    $msg = array('msg' => 'Error al actualizar el producto a la compra', 'icono' => 'error');
+                    $msg = array('msg' => 'Error al actualizar el producto a la compra', 'icon' => 'error');
                 }
             }
         }
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();
     }
-    public function listar($table)
+    public function list($table)
     {
         $id_usuario = $_SESSION['id_usuario'];
         $data['detalle'] = $this->model->getDetalle($table, $id_usuario);
@@ -146,25 +146,25 @@ class ComprasController extends Controller
     {
         $data = $this->model->deleteDetalle('detalle', $id);
         if ($data == 'ok') {
-            $msg = array('msg' => 'Producto eliminado', 'icono' => 'success');
+            $msg = array('msg' => 'Producto eliminado', 'icon' => 'success');
         } else {
-            $msg = array('msg' => 'Error al eliminar el Producto', 'icono' => 'error');
+            $msg = array('msg' => 'Error al eliminar el Producto', 'icon' => 'error');
         }
         echo json_encode($msg);
         die();
     }
-    public function deleteVenta($id)
+    public function deleteSale($id)
     {
         $data = $this->model->deleteDetalle('detalle_temp', $id);
         if ($data == 'ok') {
-            $msg = array('msg' => 'Producto eliminado', 'icono' => 'success');
+            $msg = array('msg' => 'Producto eliminado', 'icon' => 'success');
         } else {
-            $msg = array('msg' => 'Error al eliminar el Producto', 'icono' => 'error');
+            $msg = array('msg' => 'Error al eliminar el Producto', 'icon' => 'error');
         }
         echo json_encode($msg);
         die();
     }
-    public function registrarCompra()
+    public function registerPurchase()
     {
         $id_usuario = $_SESSION['id_usuario'];
         $total = $this->model->calcularCompra('detalle', $id_usuario);
@@ -192,7 +192,7 @@ class ComprasController extends Controller
         echo json_encode($msg);
         die();
     }
-    public function registrarVenta($id_cliente)
+    public function registerSale($id_cliente)
     {
         $id_usuario = $_SESSION['id_usuario'];
         $verificar = $this->model->verificarCaja($id_usuario);
@@ -227,7 +227,7 @@ class ComprasController extends Controller
         die();
     }
 
-    public function generarPdf($id_compra)
+    public function generatePDF($id_compra)
     {
         // Iniciar el almacenamiento en búfer de salida
         ob_start();
@@ -242,13 +242,14 @@ class ComprasController extends Controller
         $pdf->SetTitle('Reporte Compra');
 
         $pdf->SetFont('Arial', 'B', 9);
-        $pdf->Cell(10, 5, mb_convert_encoding($empresa['nombre'], 'ISO-8859-1', 'UTF-8'), 0, 1, 'L');
+        $pdf->Cell(55, 5, mb_convert_encoding($empresa['nombre'], 'ISO-8859-1', 'UTF-8'), 0, 1, 'C');
+        $pdf->Ln();
 
         // Ruc
         $pdf->SetFont('Arial', 'B', 9);
         $pdf->Cell(18, 5, 'RIF ', 0, 0, 'L');
         $pdf->SetFont('Arial', 'B', 9);
-        $pdf->Cell(10, 5, $empresa['ruc'], 0, 1, 'R');
+        $pdf->Cell(10, 5, $empresa['rif'], 0, 1, 'R');
 
         $pdf->SetFont('Arial', 'B', 9);
         $pdf->Cell(20, 5, 'DATOS DEL CLIENTE', 0, 1, 'L');
@@ -343,7 +344,7 @@ class ComprasController extends Controller
         $pdf->Output();
     }
 
-    public function listar_historial()
+    public function list_historial()
     {
         $data = $this->model->getHistorialCompras();
         for ($i = 0; $i < count($data); $i++) {
@@ -351,19 +352,19 @@ class ComprasController extends Controller
                 $data[$i]['estado'] = '<span class="badge badge-success">Completado</span>';
                 $data[$i]['acciones'] = '<div>
                 <button class="btn btn-warning" onclick="btnAnularC(' . $data[$i]['id'] . ')"><i class="fas fa-ban"></i></button>
-                <a class="btn btn-danger" href="' . APP_URL . "Compras/generarPdf/" . $data[$i]['id'] . '" target="_blank"><i class="fas fa-file-pdf"></i></a>
+                <a class="btn btn-danger" href="' . APP_URL . "shopping/generatePDF/" . $data[$i]['id'] . '" target="_blank"><i class="fas fa-file-pdf"></i></a>
                 </div>';
             } else {
                 $data[$i]['estado'] = '<span class="badge badge-danger">Anulado</span>';
                 $data[$i]['acciones'] = '<div>
-                <a class="btn btn-danger" href="' . APP_URL . "Compras/generarPdf/" . $data[$i]['id'] . '" target="_blank"><i class="fas fa-file-pdf"></i></a>
+                <a class="btn btn-danger" href="' . APP_URL . "shopping/generatePDF/" . $data[$i]['id'] . '" target="_blank"><i class="fas fa-file-pdf"></i></a>
                 </div>';
             }
         }
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die();
     }
-    public function listar_historial_venta()
+    public function listHistorialSale()
     {
         $data = $this->model->getHistorialVentas();
         for ($i = 0; $i < count($data); $i++) {
@@ -371,12 +372,12 @@ class ComprasController extends Controller
                 $data[$i]['estado'] = '<span class="badge badge-success">Completado</span>';
                 $data[$i]['acciones'] = '<div>
                 <button class="btn btn-warning" onclick="btnAnularV(' . $data[$i]['id'] . ')"><i class="fas fa-ban"></i></button>
-                <a class="btn btn-danger" href="' . APP_URL . "Compras/generarPdfVenta/" . $data[$i]['id'] . '" target="_blank"><i class="fas fa-file-pdf"></i></a>
+                <a class="btn btn-danger" href="' . APP_URL . "shopping/generatePdfSale/" . $data[$i]['id'] . '" target="_blank"><i class="fas fa-file-pdf"></i></a>
                 </div>';
             } else {
                 $data[$i]['estado'] = '<span class="badge badge-danger">Anulado</span>';
                 $data[$i]['acciones'] = '<div>
-                <a class="btn btn-danger" href="' . APP_URL . "Compras/generarPdfVenta/" . $data[$i]['id'] . '" target="_blank"><i class="fas fa-file-pdf"></i></a>
+                <a class="btn btn-danger" href="' . APP_URL . "shopping/generatePdfSale/" . $data[$i]['id'] . '" target="_blank"><i class="fas fa-file-pdf"></i></a>
                 </div>';
             }
         }
@@ -384,7 +385,7 @@ class ComprasController extends Controller
         die();
     }
 
-    public function generarPdfVenta($id_venta)
+    public function generatePdfSale($id_venta)
     {
         // Iniciar el almacenamiento en búfer de salida
         ob_start();
@@ -400,13 +401,14 @@ class ComprasController extends Controller
         $pdf->SetTitle('Reporte Venta');
 
         $pdf->SetFont('Arial', 'B', 9);
-        $pdf->Cell(10, 5, mb_convert_encoding($empresa['nombre'], 'ISO-8859-1', 'UTF-8'), 0, 1, 'L');
+        $pdf->Cell(55, 5, mb_convert_encoding($empresa['nombre'], 'ISO-8859-1', 'UTF-8'), 0, 1, 'C');
+        $pdf->Ln();
 
         // Ruc
         $pdf->SetFont('Arial', 'B', 9);
         $pdf->Cell(18, 5, 'RIF ', 0, 0, 'L');
         $pdf->SetFont('Arial', 'B', 9);
-        $pdf->Cell(10, 5, $empresa['ruc'], 0, 1, 'R');
+        $pdf->Cell(10, 5, $empresa['rif'], 0, 1, 'R');
 
         $pdf->SetFont('Arial', 'B', 9);
         $pdf->Cell(20, 5, 'DATOS DEL CLIENTE', 0, 1, 'L');
@@ -505,16 +507,14 @@ class ComprasController extends Controller
         ob_end_clean();
         $pdf->Output();
     }
-    public function calcularDescuento($datos)
+
+    public function calculateDiscount($id, $value)
     {
-        $array = explode(",", $datos);
-        $id = $array[0];
-        $desc = $array[1];
-        if (empty($id) || empty($desc)) {
+        if (empty($id) || empty($value)) {
             $msg = array('msg' => 'Error', 'icono' => 'error');
         } else {
             $descuento_actual = $this->model->verificarDescuento($id);
-            $descuento_total = $descuento_actual['descuento'] + $desc;
+            $descuento_total = $descuento_actual['descuento'] + $value;
             $sub_total = ($descuento_actual['cantidad'] * $descuento_actual['precio']) - $descuento_total;
             $data = $this->model->actualizarDescuento($descuento_total, $sub_total, $id);
             if ($data == 'ok') {
@@ -526,7 +526,8 @@ class ComprasController extends Controller
         echo json_encode($msg);
         die();
     }
-    public function anularCompra($id_compra)
+
+    public function anularShopping($id_compra)
     {
         $data = $this->model->getAnularCompra($id_compra);
         $anular = $this->model->getAnular($id_compra);
@@ -536,15 +537,15 @@ class ComprasController extends Controller
             $this->model->actualizarStock($stock, $row['id_producto']);
         }
         if ($anular == 'ok') {
-            $msg = array('msg' => 'Compra Anulada', 'icono' => 'success');
+            $msg = array('msg' => 'Compra Anulada', 'icon' => 'success');
         } else {
-            $msg = array('msg' => 'Error al Anular', 'icono' => 'error');
+            $msg = array('msg' => 'Error al Anular', 'icon' => 'error');
         }
         echo json_encode($msg);
         die();
     }
 
-    public function anularVenta($id_venta)
+    public function anularSale($id_venta)
     {
         $data = $this->model->getAnularVenta($id_venta);
         $anular = $this->model->getAnularV($id_venta);
@@ -554,38 +555,60 @@ class ComprasController extends Controller
             $this->model->actualizarStock($stock, $row['id_producto']);
         }
         if ($anular == 'ok') {
-            $msg = array('msg' => 'Venta Anulada', 'icono' => 'success');
+            $msg = array('msg' => 'Venta Anulada', 'icon' => 'success');
         } else {
-            $msg = array('msg' => 'Error al Anular', 'icono' => 'error');
+            $msg = array('msg' => 'Error al Anular', 'icon' => 'error');
         }
         echo json_encode($msg);
         die();
     }
 
-    public function pdf()
+    public function pdfSale()
     {
+        // Iniciar la sesión si no está iniciada
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
 
-        $desde = $_POST['desde'];
-        $hasta = $_POST['hasta'];
+        // Verificar si las claves 'desde' y 'hasta' están definidas en $_POST
+        $desde = isset($_POST['desde']) ? $_POST['desde'] : ($_SESSION['desde'] ?? null);
+        $hasta = isset($_POST['hasta']) ? $_POST['hasta'] : ($_SESSION['hasta'] ?? null);
+
+        // Guardar los datos en la sesión si vienen del formulario
+        if (!empty($desde) && !empty($hasta)) {
+            $_SESSION['desde'] = $desde;
+            $_SESSION['hasta'] = $hasta;
+        }
+
+        // Obtener los datos según las fechas proporcionadas
         if (empty($desde) || empty($hasta)) {
             $data = $this->model->getHistorialVentas();
         } else {
             $data = $this->model->getRangoFechas($desde, $hasta);
         }
+
+        // Iniciar el almacenamiento en búfer de salida
+        ob_start();
+
         require('Libraries/fpdf/fpdf.php');
 
         $pdf = new FPDF('P', 'mm', 'A4');
         $pdf->AddPage();
-        $pdf->SetMargins(5, 0, 0);
+        $pdf->SetMargins(20, 10, 10); // Márgenes ajustados
         $pdf->SetTitle('Reporte Ventas');
+        $pdf->SetFont('Arial', 'B', 14);
+
+        // Título centrado
+        $pdf->Cell(0, 10, 'Reporte de Ventas', 0, 1, 'C');
+        $pdf->Ln(5); // Espacio adicional
+
+        // Encabezado de la tabla
         $pdf->SetFont('Arial', 'B', 12);
-        $pdf->SetFillColor(0, 0, 0);
-        $pdf->SetTextColor(255, 255, 255);
-        $pdf->Cell(20, 5, 'Id', 0, 0, 'C', true);
-        $pdf->Cell(40, 5, 'Cliente', 0, 0, 'C', true);
-        $pdf->Cell(40, 5, 'Producto', 0, 0, 'C', true);
-        $pdf->Cell(40, 5, 'Fecha y Hora', 0, 0, 'C', true);
-        $pdf->Cell(35, 5, 'Total', 0, 1, 'C', true);
+        $pdf->SetFillColor(200, 220, 255); // Color de fondo para el encabezado
+        $pdf->Cell(30, 10, 'REF', 1, 0, 'C', true);
+        $pdf->Cell(50, 10, 'Cliente', 1, 0, 'C', true);
+        $pdf->Cell(50, 10, 'Fecha y Hora', 1, 0, 'C', true);
+        $pdf->Cell(40, 10, 'Total', 1, 1, 'C', true);
 
         $pdf->SetFont('Arial', '', 10);
         $pdf->SetTextColor(0, 0, 0);
@@ -594,62 +617,107 @@ class ComprasController extends Controller
         $totalCliente = 0;
 
         foreach ($data as $row) {
+            // Formatear la fecha y hora en formato 12 horas con AM/PM
+            $fechaFormateada = date('d/m/Y | h:i:s A', strtotime($row['fecha']));
+
             if ($row['nombre'] != $clienteActual) {
                 if ($clienteActual != '') {
-                    $pdf->Cell(175, 10, 'El total: $' . $totalCliente, 0, 1, 'R');
-                    $pdf->Ln(5);
+                    // Total por cliente
+                    $pdf->SetFont('Arial', 'B', 10);
+                    $pdf->Cell(130, 8, 'Total Cliente:', 1, 0, 'R');
+                    $pdf->Cell(40, 8, '$' . number_format($totalCliente, 2), 1, 1, 'C');
+                    $pdf->Ln(2);
                 }
                 $clienteActual = $row['nombre'];
                 $totalCliente = 0;
-                $pdf->Cell(90, 5, utf8_decode($clienteActual), 0, 1, 'C');
+
+                // Nombre del cliente como subtítulo
+                $pdf->SetFont('Arial', 'B', 11);
+                $pdf->SetFillColor(230, 230, 230); // Fondo gris claro
+                $pdf->Cell(165, 8, mb_convert_encoding($clienteActual, 'ISO-8859-1', 'UTF-8'), 1, 1, 'C', true);
             }
-            $pdf->Cell(30, 5, $row['id'], 0, 0, 'C');
-            $pdf->Cell(110, 5, utf8_decode($row['descripcion']), 0, 0, 'C');
-            $pdf->Cell(2, 5, $row['fecha'], 0, 0, 'R');
-            $pdf->Cell(27, 5, '$' . $row['total'], 0, 1, 'R');
+
+            // Detalles de cada venta
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(30, 8, $row['id'], 1, 0, 'C');
+            $pdf->Cell(50, 8, mb_convert_encoding($row['nombre'], 'ISO-8859-1', 'UTF-8'), 1, 0, 'C');
+            $pdf->Cell(50, 8, $fechaFormateada, 1, 0, 'C');
+            $pdf->Cell(40, 8, '$' . number_format($row['total'], 2), 1, 1, 'C');
             $totalCliente += $row['total'];
         }
 
+        // Total final del último cliente
         if ($clienteActual != '') {
-            $pdf->Cell(175, 10, 'El Total: $' . $totalCliente, 0, 1, 'R');
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(130, 8, 'Total Cliente:', 1, 0, 'R');
+            $pdf->Cell(40, 8, '$' . number_format($totalCliente, 2), 1, 1, 'C');
         }
 
+        // Limpiar el búfer de salida antes de generar el PDF
+        ob_end_clean();
         $pdf->Output();
     }
 
-    public function pdfCompra()
-    {
 
-        $desde = $_POST['desde'];
-        $hasta = $_POST['hasta'];
+
+
+    public function pdfShopping()
+    {
+        // Iniciar la sesión si no está iniciada
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Verificar si las claves 'desde' y 'hasta' están definidas en $_POST
+        $desde = isset($_POST['desde']) ? $_POST['desde'] : ($_SESSION['desde'] ?? null);
+        $hasta = isset($_POST['hasta']) ? $_POST['hasta'] : ($_SESSION['hasta'] ?? null);
+
+        // Guardar los datos en la sesión si vienen del formulario
+        if (!empty($desde) && !empty($hasta)) {
+            $_SESSION['desde'] = $desde;
+            $_SESSION['hasta'] = $hasta;
+        }
+
+        // Obtener los datos según las fechas proporcionadas
         if (empty($desde) || empty($hasta)) {
             $data = $this->model->getHistorialCompras();
         } else {
             $data = $this->model->getRangoFechasCompra($desde, $hasta);
         }
+
+        // Iniciar el almacenamiento en búfer de salida
+        ob_start();
+
         require('Libraries/fpdf/fpdf.php');
 
         $pdf = new FPDF('P', 'mm', 'A4');
         $pdf->AddPage();
-        $pdf->SetMargins(5, 0, 0);
+        $pdf->SetMargins(25, 10, 10);
         $pdf->SetTitle('Reporte Compra');
+        $pdf->SetFont('Arial', 'B', 14);
+
+        // Título del reporte
+        $pdf->Cell(0, 10, 'Reporte de Compras', 0, 1, 'C');
+        $pdf->Ln(5);
+
+        // Encabezados de la tabla
         $pdf->SetFont('Arial', 'B', 12);
-        $pdf->SetFillColor(0, 0, 0);
-        $pdf->SetTextColor(255, 255, 255);
-        $pdf->Cell(20, 5, 'Id', 0, 0, 'C', true);
-        $pdf->Cell(55, 5, 'Productos', 0, 0, 'C', true);
-        $pdf->Cell(50, 5, 'Fecha y Hora', 0, 0, 'C', true);
-        $pdf->Cell(55, 5, 'Total', 0, 1, 'C', true);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetFillColor(200, 220, 255); // Color de fondo para el encabezado
+        $pdf->Cell(30, 10, 'Ref', 1, 0, 'C', true);
+        $pdf->Cell(80, 10, 'Fecha', 1, 0, 'C', true);
+        $pdf->Cell(50, 10, 'Total (Bs)', 1, 1, 'C', true);
 
         foreach ($data as $row) {
-            $pdf->Cell(30, 5, $row['id'], 0, 0, 'C');
-            $pdf->Cell(45, 5, utf8_decode($row['descripcion']), 0, 0, 'C');
-            $pdf->Cell(60, 5, $row['fecha'], 0, 0, 'C');
-            $pdf->Cell(45, 5, $row['total'], 0, 1, 'C');
+            $pdf->SetFont('Arial', '', 10);
+            // Convertir la fecha al formato día/mes/año
+            $fechaFormateada = date('d/m/Y | h:i:s A', strtotime($row['fecha']));
+            $pdf->Cell(30, 10, $row['id'], 1, 0, 'C');
+            $pdf->Cell(80, 10, $fechaFormateada, 1, 0, 'C');
+            $pdf->Cell(50, 10, 'Bs ' . number_format($row['total'], 2), 1, 1, 'C');
         }
 
+        // Limpiar el búfer de salida antes de generar el PDF
+        ob_end_clean();
         $pdf->Output();
     }
 }

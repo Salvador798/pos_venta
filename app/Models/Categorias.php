@@ -6,27 +6,23 @@ use App\Config\Model;
 
 class Categorias extends Model
 {
-    private $nombre, $id, $estado;
-
-    public function __construct()
-    {
-        parent::__construct();
-    }
-    public function getCategorias()
+    public static function getCategorias()
     {
         $sql = "SELECT * FROM categorias";
-        $data = $this->selectAll($sql);
+        $data = self::selectAll($sql);
         return $data;
     }
-    public function registrarCategorias(string $nombre)
+
+    public static function registrarCategorias(string $nombre)
     {
-        $this->nombre = $nombre;
-        $verificar = "SELECT * FROM categorias WHERE nombre = '$this->nombre'";
-        $existe = $this->select($verificar);
+        $verificar = "SELECT * FROM categorias WHERE nombre = '$nombre'";
+        $existe = self::select($verificar);
+
         if (empty($existe)) {
             $sql = "INSERT INTO categorias (nombre) VALUES (?)";
-            $datos = array($this->nombre);
-            $data = $this->save($sql, $datos);
+            $datos = array($nombre);
+            $data = self::save($sql, $datos);
+
             if ($data == 1) {
                 $res = "ok";
             } else {
@@ -35,15 +31,15 @@ class Categorias extends Model
         } else {
             $res = "existe";
         }
+
         return $res;
     }
-    public function modificarCategorias(string $nombre, int $id)
+
+    public static function modificarCategorias(string $nombre, int $id)
     {
-        $this->nombre = $nombre;
-        $this->id = $id;
         $sql = "UPDATE categorias SET nombre = ? WHERE id = ?";
-        $datos = array($this->nombre, $this->id);
-        $data = $this->save($sql, $datos);
+        $datos = array($nombre, $id);
+        $data = self::save($sql, $datos);
         if ($data == 1) {
             $res = "modificado";
         } else {
@@ -51,26 +47,24 @@ class Categorias extends Model
         }
         return $res;
     }
-    public function editarCat(int $id)
+    public static function editarCat(int $id)
     {
         $sql = "SELECT * FROM categorias WHERE id = $id";
-        $data = $this->select($sql);
+        $data = self::select($sql);
         return $data;
     }
-    public function accionCat(int $estado, int $id)
+    public static function accionCat(int $estado, int $id)
     {
-        $this->id = $id;
-        $this->estado = $estado;
         $sql = "UPDATE categorias SET estado = ? WHERE id = ?";
-        $datos = array($this->estado, $this->id);
-        $data = $this->save($sql, $datos);
+        $datos = array($estado, $id);
+        $data = self::save($sql, $datos);
         return $data;
     }
 
-    public function verificarPermiso(int $id_user, string $nombre)
+    public static function verificarPermiso(int $id_user, string $nombre)
     {
         $sql = "SELECT p.id, p.permiso, d.id, d.id_usuario, d.id_permiso FROM permisos p INNER JOIN detalle_permisos d on p.id = d.id_permiso WHERE d.id_usuario = $id_user AND p.permiso = '$nombre'";
-        $data = $this->selectAll($sql);
+        $data = self::selectAll($sql);
         return $data;
     }
 }

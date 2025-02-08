@@ -14,10 +14,11 @@
     <link href="<?php echo APP_URL; ?>public/css/select2.min.css" rel="stylesheet" />
     <script src="<?php echo APP_URL; ?>public/js/all.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 </head>
 
 <body class="sb-nav-fixed bg-style">
-    <nav class="sb-topnav navbar navbar-expand navbar-light">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-navbar">
         <!-- Navbar Brand-->
         <a class="navbar-brand ps-3">Pos Venta</a>
         <!-- Sidebar Toggle-->
@@ -31,7 +32,7 @@
                     <li>
                         <hr class="dropdown-divider" />
                     </li>
-                    <li><a class="dropdown-item" href="<?php echo APP_URL; ?>Usuarios/salir">Cerrar Sesión</a></li>
+                    <li><a class="dropdown-item" href="<?php echo APP_URL; ?>/logout">Cerrar Sesión</a></li>
                 </ul>
             </li>
         </ul>
@@ -53,7 +54,7 @@
                         </div>
                     </div>
                     <div class="nav">
-                        <a class="nav-link" href="<?php echo APP_URL; ?>Administracion/home">
+                        <a class="nav-link linked" href="<?php echo APP_URL; ?>administration/home">
                             <div class="sb-nav-link-icon">
                                 <span class="material-symbols-outlined text-dark">
                                     dashboard
@@ -61,7 +62,7 @@
                             </div>
                             Dashboard
                         </a>
-                        <a class="nav-link" href="<?php echo APP_URL; ?>Clientes">
+                        <a class="nav-link linked" href="<?php echo APP_URL; ?>clients">
                             <div class="sb-nav-link-icon">
                                 <span class="material-symbols-outlined text-dark">
                                     person
@@ -70,7 +71,7 @@
                             Clientes
                         </a>
 
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseProducts" aria-expanded="false" aria-controls="collapseProducts">
+                        <a class="nav-link linked collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseProducts" aria-expanded="false" aria-controls="collapseProducts">
                             <div class="sb-nav-link-icon">
                                 <span class="material-symbols-outlined text-dark">
                                     category
@@ -85,13 +86,13 @@
                         </a>
                         <div class="collapse" id="collapseProducts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="<?php echo APP_URL; ?>Categorias">Categoria</a>
-                                <a class="nav-link" href="<?php echo APP_URL; ?>Medidas">Medidas</a>
-                                <a class="nav-link" href="<?php echo APP_URL; ?>Productos">Productos</a>
+                                <a class="nav-link linked" href="<?php echo APP_URL; ?>categories">Categoria</a>
+                                <a class="nav-link linked" href="<?php echo APP_URL; ?>extends">Medidas</a>
+                                <a class="nav-link linked" href="<?php echo APP_URL; ?>products">Productos</a>
                             </nav>
                         </div>
 
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseExits" aria-expanded="false" aria-controls="collapseExits">
+                        <a class="nav-link linked collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseExits" aria-expanded="false" aria-controls="collapseExits">
                             <div class="sb-nav-link-icon">
                                 <span class="material-symbols-outlined text-dark">
                                     content_paste
@@ -106,12 +107,12 @@
                         </a>
                         <div class="collapse" id="collapseExits" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="<?php echo APP_URL; ?>Compras/index">Compra</a>
-                                <a class="nav-link" href="<?php echo APP_URL; ?>Compras/ventas">Ventas</a>
+                                <a class="nav-link linked" href="<?php echo APP_URL; ?>shopping">Compra</a>
+                                <a class="nav-link linked" href="<?php echo APP_URL; ?>sales">Ventas</a>
                             </nav>
                         </div>
 
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                        <a class="nav-link linked collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                             <div class="sb-nav-link-icon">
                                 <span class="material-symbols-outlined text-dark">
                                     supervised_user_circle
@@ -126,13 +127,13 @@
                         </a>
                         <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="<?php echo APP_URL; ?>Usuarios">Usuarios</a>
-                                <a class="nav-link" href="<?php echo APP_URL; ?>Caja">Cajas</a>
-                                <a class="nav-link" href="<?php echo APP_URL; ?>Caja/arqueo">Arqueo de Caja</a>
+                                <a class="nav-link linked" href="<?php echo APP_URL; ?>users">Usuarios</a>
+                                <a class="nav-link linked" href="<?php echo APP_URL; ?>boxes">Cajas</a>
+                                <a class="nav-link linked" href="<?php echo APP_URL; ?>arqueo">Arqueo de Caja</a>
                             </nav>
                         </div>
 
-                        <a class="nav-link" href="<?php echo APP_URL; ?>Administracion">
+                        <a class="nav-link linked" href="<?php echo APP_URL; ?>administration">
                             <div class="sb-nav-link-icon">
                                 <span class="material-symbols-outlined text-dark">
                                     settings

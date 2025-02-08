@@ -4,5 +4,9 @@
             "App\\": "app/",
             "App\\Config\\": "config/"
         }
+    },
+    "require": {
+        "bramus/router": "^1.6",
+        "nikic/fast-route": "^1.3"
     }
 }

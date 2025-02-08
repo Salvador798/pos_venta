@@ -31,7 +31,7 @@
                         <label for="nombre">Nombre</label>
                     </div>
                     <br>
-                    <button class="btn btn-primary" type="button" onclick="registrarCat(event);" id="btnAccion">Agregar</button>
+                    <button class="btn btn-primary" type="button" onclick="registerCat(event);" id="btnAccion">Agregar</button>
                     <button class="btn btn-danger" type="button" data-bs-dismiss="modal">Cancelar</button>
                 </form>
             </div>

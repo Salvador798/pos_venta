@@ -33,7 +33,7 @@
                         <label for="nombre">Nombre</label>
                     </div>
                     <br>
-                    <button class="btn btn-primary" type="button" onclick="registrarMed(event);" id="btnAccion">Agregar</button>
+                    <button class="btn btn-primary" type="button" onclick="registerExtends(event);" id="btnAccion">Agregar</button>
                     <button class="btn btn-danger" type="button" data-bs-dismiss="modal">Cancelar</button>
                 </form>
             </div>

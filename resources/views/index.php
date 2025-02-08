@@ -62,7 +62,6 @@
             </footer>
         </div>
     </div>
-    <script src="public/js/jquery-3.5.1.slim.min.js"></script>
     <script src="public/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="public/js/scripts.js"></script>
     <script>

@@ -9,8 +9,8 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <input id="id" class="form-control" type="hidden" name="id" value="<?php echo $data['id']; ?>">
-                        <label for="ruc">RIF</label>
-                        <input id="ruc" class="form-control" type="text" name="ruc" value="<?php echo $data['ruc']; ?>">
+                        <label for="rif">RIF</label>
+                        <input id="rif" class="form-control" type="text" name="rif" value="<?php echo $data['rif']; ?>">
                     </div>
                 </div>
                 <div class="col-md-6">
