@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 05-10-2024 a las 00:49:13
+-- Tiempo de generación: 17-03-2025 a las 03:13:57
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -125,7 +125,6 @@ INSERT INTO `clientes` (`id`, `dni`, `nombre`, `telefono`, `direccion`, `estado`
 
 CREATE TABLE `compras` (
   `id` int(11) NOT NULL,
-  `id_producto` int(11) NOT NULL,
   `total` decimal(10,2) NOT NULL,
   `fecha` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `estado` int(11) NOT NULL DEFAULT 1
@@ -135,18 +134,19 @@ CREATE TABLE `compras` (
 -- Volcado de datos para la tabla `compras`
 --
 
-INSERT INTO `compras` (`id`, `id_producto`, `total`, `fecha`, `estado`) VALUES
-(3, 0, 220.00, '2024-08-19 23:49:39', 0),
-(4, 0, 1000.00, '2024-08-19 23:50:32', 0),
-(5, 0, 20.00, '2024-08-19 23:50:45', 0),
-(6, 0, 62.00, '2024-08-19 23:12:39', 1),
-(7, 0, 260.00, '2024-08-19 22:47:07', 1),
-(8, 0, 120.00, '2024-08-19 23:11:46', 1),
-(9, 0, 550.00, '2024-09-24 17:29:53', 1),
-(10, 0, 40.00, '2024-10-01 14:40:41', 1),
-(11, 0, 200.00, '2024-10-01 14:44:39', 1),
-(12, 0, 280.00, '2024-10-01 17:21:10', 1),
-(13, 0, 203.00, '2024-10-01 22:58:34', 1);
+INSERT INTO `compras` (`id`, `total`, `fecha`, `estado`) VALUES
+(3, 220.00, '2024-08-19 23:49:39', 0),
+(4, 1000.00, '2024-08-19 23:50:32', 0),
+(5, 20.00, '2024-08-19 23:50:45', 0),
+(6, 62.00, '2024-08-19 23:12:39', 1),
+(7, 260.00, '2024-08-19 22:47:07', 1),
+(8, 120.00, '2024-08-19 23:11:46', 1),
+(9, 550.00, '2024-09-24 17:29:53', 1),
+(10, 40.00, '2024-10-01 14:40:41', 1),
+(11, 200.00, '2024-10-01 14:44:39', 1),
+(12, 280.00, '2024-10-01 17:21:10', 1),
+(13, 203.00, '2024-10-01 22:58:34', 1),
+(14, 89.60, '2025-03-17 02:10:34', 1);
 
 -- --------------------------------------------------------
 
@@ -228,7 +228,10 @@ INSERT INTO `detalle_compras` (`id`, `id_compra`, `id_producto`, `cantidad`, `pr
 (21, 12, 10, 20, 7.00, 140.00),
 (22, 12, 11, 20, 2.00, 40.00),
 (23, 12, 8, 20, 5.00, 100.00),
-(24, 13, 10, 25, 7.00, 175.00);
+(24, 13, 10, 25, 7.00, 175.00),
+(25, 14, 7, 20, 2.00, 40.00),
+(26, 14, 5, 10, 2.00, 20.00),
+(27, 14, 6, 10, 2.00, 20.00);
 
 -- --------------------------------------------------------
 
@@ -315,7 +318,9 @@ INSERT INTO `detalle_venta` (`id`, `id_venta`, `id_producto`, `cantidad`, `descu
 (12, 18, 7, 20, 0.00, 2.00, 40.00),
 (13, 19, 5, 5, 0.00, 2.00, 10.00),
 (14, 20, 7, 20, 0.00, 2.00, 40.00),
-(15, 20, 5, 20, 0.00, 2.00, 40.00);
+(15, 20, 5, 20, 0.00, 2.00, 40.00),
+(16, 21, 7, 20, 0.00, 2.00, 40.00),
+(17, 21, 5, 10, 0.00, 2.00, 20.00);
 
 -- --------------------------------------------------------
 
@@ -402,7 +407,7 @@ INSERT INTO `productos` (`id`, `codigo`, `descripcion`, `precio_compra`, `precio
 (2, 'J-32594', 'Jugo', 2.00, 2.00, 'Aplica', 23, 'default.png', 5, 4, 1),
 (4, 'J-464576', 'Cocacola', 2.00, 2.00, 'Exento', -30, 'default.png', 5, 4, 1),
 (5, '02', 'San Salvador', 2.00, 2.00, 'Aplica', 206, 'default.png', 1, 1, 1),
-(6, '03', 'Zulia', 2.00, 2.00, 'Exento', 250, 'default.png', 1, 1, 1),
+(6, '03', 'Zulia', 2.00, 2.00, 'Exento', 260, 'default.png', 1, 1, 1),
 (7, '01', 'Refresco', 2.00, 2.00, 'Aplica', 126, 'default.png', 5, 4, 1),
 (8, '04', 'Jugo', 5.00, 5.00, 'Aplica', 20, 'default.png', 1, 1, 1),
 (9, '05', 'Galleta', 3.00, 3.00, 'Exento', 0, 'default.png', 1, 1, 1),
@@ -443,7 +448,6 @@ CREATE TABLE `ventas` (
   `id` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
   `id_cliente` int(11) NOT NULL,
-  `id_producto` int(11) NOT NULL,
   `total` decimal(10,2) NOT NULL,
   `fecha` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `estado` int(11) NOT NULL DEFAULT 1,
@@ -454,18 +458,19 @@ CREATE TABLE `ventas` (
 -- Volcado de datos para la tabla `ventas`
 --
 
-INSERT INTO `ventas` (`id`, `id_usuario`, `id_cliente`, `id_producto`, `total`, `fecha`, `estado`, `apertura`) VALUES
-(10, 7, 1, 0, 20.00, '2024-08-19 23:52:05', 1, 0),
-(11, 7, 1, 0, 100.00, '2024-08-19 23:52:34', 0, 0),
-(12, 7, 1, 0, 50.00, '2024-08-19 23:52:11', 1, 0),
-(13, 0, 1, 0, 30.00, '2024-08-19 23:52:16', 1, 1),
-(14, 0, 1, 0, 15.00, '2024-08-13 22:59:46', 1, 1),
-(15, 0, 3, 0, 30.00, '2024-08-13 22:59:49', 1, 1),
-(16, 7, 1, 0, 20.00, '2024-08-15 00:51:32', 1, 0),
-(17, 7, 1, 0, 40.00, '2024-08-15 01:00:55', 1, 0),
-(18, 1, 1, 0, 40.00, '2024-08-18 19:24:46', 1, 1),
-(19, 1, 1, 0, 10.00, '2024-08-18 22:55:21', 1, 1),
-(20, 1, 1, 0, 0.00, '2024-10-01 23:07:11', 1, 1);
+INSERT INTO `ventas` (`id`, `id_usuario`, `id_cliente`, `total`, `fecha`, `estado`, `apertura`) VALUES
+(10, 7, 1, 20.00, '2024-08-19 23:52:05', 1, 0),
+(11, 7, 1, 100.00, '2024-08-19 23:52:34', 0, 0),
+(12, 7, 1, 50.00, '2024-08-19 23:52:11', 1, 0),
+(13, 0, 1, 30.00, '2024-08-19 23:52:16', 1, 1),
+(14, 0, 1, 15.00, '2024-08-13 22:59:46', 1, 1),
+(15, 0, 3, 30.00, '2024-08-13 22:59:49', 1, 1),
+(16, 7, 1, 20.00, '2024-08-15 00:51:32', 1, 0),
+(17, 7, 1, 40.00, '2024-08-15 01:00:55', 1, 0),
+(18, 1, 1, 40.00, '2024-08-18 19:24:46', 1, 1),
+(19, 1, 1, 10.00, '2024-08-18 22:55:21', 1, 1),
+(20, 1, 1, 0.00, '2024-10-01 23:07:11', 1, 1),
+(21, 1, 1, 69.60, '2025-03-17 02:12:03', 1, 1);
 
 --
 -- Índices para tablas volcadas
@@ -499,8 +504,7 @@ ALTER TABLE `clientes`
 -- Indices de la tabla `compras`
 --
 ALTER TABLE `compras`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_producto` (`id_producto`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `configuracion`
@@ -601,7 +605,7 @@ ALTER TABLE `clientes`
 -- AUTO_INCREMENT de la tabla `compras`
 --
 ALTER TABLE `compras`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `configuracion`
@@ -613,13 +617,13 @@ ALTER TABLE `configuracion`
 -- AUTO_INCREMENT de la tabla `detalle`
 --
 ALTER TABLE `detalle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_compras`
 --
 ALTER TABLE `detalle_compras`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_permisos`
@@ -631,13 +635,13 @@ ALTER TABLE `detalle_permisos`
 -- AUTO_INCREMENT de la tabla `detalle_temp`
 --
 ALTER TABLE `detalle_temp`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `medidas`
@@ -667,7 +671,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- Restricciones para tablas volcadas
