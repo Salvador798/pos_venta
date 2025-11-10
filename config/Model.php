@@ -48,8 +48,22 @@ class Model extends Conexion
         try {
             $stmt = self::$pdo->prepare($sql);
             $result = $stmt->execute($params);
-            return $result ? 1 : 0;
+            
+            if ($result) {
+                // Verificar si fue un INSERT y obtener el número de filas afectadas
+                $rowCount = $stmt->rowCount();
+                if ($rowCount > 0) {
+                    return 1;
+                } else {
+                    error_log("Warning: save() ejecutado pero 0 filas afectadas. SQL: $sql");
+                    return 0;
+                }
+            } else {
+                error_log("Error: execute() devolvió false. SQL: $sql");
+                return 0;
+            }
         } catch (\PDOException $e) {
+            error_log("PDO Error en save(): " . $e->getMessage() . " | SQL: " . $sql . " | Params: " . json_encode($params));
             return false;
         }
     }

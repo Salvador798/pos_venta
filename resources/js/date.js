@@ -1,5 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
-  configurarFechas("min", "hasta");
+  const desdeInput = document.getElementById("min");
+  const hastaInput = document.getElementById("hasta");
+
+  if (desdeInput && hastaInput) {
+    configurarFechas("min", "hasta");
+  }
 });
 
 function configurarFechas(desdeId, hastaId) {
@@ -7,7 +12,6 @@ function configurarFechas(desdeId, hastaId) {
   const hastaInput = document.getElementById(hastaId);
 
   if (!desdeInput || !hastaInput) {
-    console.error("Uno o ambos elementos no se encontraron en el DOM.");
     return;
   }
 

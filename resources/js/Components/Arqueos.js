@@ -77,52 +77,154 @@ export async function abrirArqueo(e) {
 
   const monto_inicial = document.getElementById("monto_inicial");
 
-  if (monto_inicial.value == "") {
-    alerts("Todos los campos son obligatorios", "warning");
+  if (!monto_inicial) {
+    alerts("Error: No se encontró el campo de monto inicial", "error");
+    return;
+  }
+
+  if (monto_inicial.value == "" || monto_inicial.value.trim() == "") {
+    alerts("El monto inicial es obligatorio", "warning");
+    return;
+  }
+
+  // Validar que el monto sea numérico
+  const montoValue = monto_inicial.value.replace(/,/g, "");
+  if (isNaN(montoValue) || parseFloat(montoValue) < 0) {
+    alerts(
+      "El monto inicial debe ser un número válido mayor o igual a cero",
+      "warning"
+    );
     return;
   }
 
   try {
+    const formData = new FormData(document.getElementById("frmAbrirCaja"));
+
     const response = await fetch(`${APP_URL}arqueo`, {
       method: "POST",
-      body: new FormData(document.getElementById("frmAbrirCaja")),
+      body: formData,
+    });
+
+    // Verificar que la respuesta sea JSON válido
+    const contentType = response.headers.get("content-type") || "";
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Error HTTP:", response.status);
+      console.error("Respuesta del servidor:", errorText);
+      alerts(
+        `Error en la respuesta del servidor (${response.status})`,
+        "error"
+      );
+      return;
+    }
+
+    // Intentar parsear como JSON
+    let res;
+    try {
+      if (!contentType.includes("application/json")) {
+        // Si no es JSON, leer como texto para debugging
+        const text = await response.text();
+        console.error("Respuesta no es JSON. Content-Type:", contentType);
+        console.error("Respuesta recibida:", text);
+        alerts(
+          "El servidor devolvió una respuesta no válida. Revise la consola para más detalles.",
+          "error"
+        );
+        return;
+      }
+      res = await response.json();
+    } catch (parseError) {
+      // Si falla el parseo, clonar la respuesta y leer como texto
+      const responseClone = response.clone();
+      const text = await responseClone.text();
+      console.error("Error al parsear JSON:", parseError);
+      console.error("Texto recibido:", text);
+      alerts("Error al procesar la respuesta del servidor", "error");
+      return;
+    }
+
+    if (res.msg && res.icon) {
+      $("#abrir_caja").modal("hide");
+      alerts(res.msg, res.icon);
+
+      // Actualiza la tabla de arqueo solo si fue exitoso
+      if (res.icon === "success") {
+        try {
+          const responseList = await fetch(`${APP_URL}arqueo/listArqueo`);
+          if (responseList.ok) {
+            const arqueo = await responseList.json();
+            if (t_arqueo) {
+              t_arqueo.clear().rows.add(arqueo).draw();
+            }
+          }
+        } catch (error) {
+          console.error("Error al actualizar la tabla:", error);
+        }
+      }
+    } else {
+      console.error("Respuesta inválida del servidor:", res);
+      alerts("La respuesta del servidor no tiene el formato esperado", "error");
+    }
+  } catch (error) {
+    console.error("Error completo:", error);
+    alerts("Error al abrir la caja. Por favor, intente nuevamente.", "error");
+  }
+}
+
+export async function cerrarCaja() {
+  try {
+    const response = await fetch(`${APP_URL}arqueo/getSales`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
     if (!response.ok) {
       throw new Error("Error en la respuesta de la red");
     }
 
-    const res = await response.json();
-    $("#abrir_caja").modal("hide");
-    alerts(res.msg, res.icon);
+    // Verificar que la respuesta sea JSON válido
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      const text = await response.text();
+      console.error("Respuesta no es JSON:", text);
+      throw new Error("El servidor devolvió una respuesta no válida");
+    }
 
-    // Actualiza la tabla de arqueo
-    const responseList = await fetch(`${APP_URL}arqueo/listArqueo`);
-    const arqueo = await responseList.json();
-    t_arqueo.clear().rows.add(arqueo).draw();
+    const res = await response.json();
+
+    // Validar que los datos necesarios existan (pero permitir valores en 0)
+    if (!res.monto_total || !res.total_ventas || !res.inicial) {
+      console.error("Datos incompletos en la respuesta:", res);
+      alerts(
+        "No se encontraron datos de la caja. Asegúrese de tener una caja abierta.",
+        "error"
+      );
+      return;
+    }
+
+    // Validar que exista una caja abierta (inicial debe tener id)
+    if (!res.inicial.id || res.inicial.id === "") {
+      alerts(
+        "No hay una caja abierta. Debe abrir una caja primero.",
+        "warning"
+      );
+      return;
+    }
+
+    document.getElementById("monto_final").value = res.monto_total.total || 0;
+    document.getElementById("total_ventas").value = res.total_ventas.total || 0;
+    document.getElementById("monto_inicial").value =
+      res.inicial.monto_inicial || 0;
+    document.getElementById("monto_general").value = res.monto_general || 0;
+    document.getElementById("id").value = res.inicial.id || "";
+    document.getElementById("ocultar_campos").classList.remove("d-none");
+    document.getElementById("btnAccion").textContent = "Cerrar Caja";
+    $("#abrir_caja").modal("show");
   } catch (error) {
     console.error("Error:", error);
-    alerts("Error en la petición", "error");
+    alerts("Error al obtener los datos de ventas", "error");
   }
-}
-
-export function cerrarCaja() {
-  const url = APP_URL + "arqueo/getSales";
-  const http = new XMLHttpRequest();
-  http.open("GET", url, true);
-  http.send();
-  http.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-      const res = JSON.parse(this.responseText);
-      document.getElementById("monto_final").value = res.monto_total.total;
-      document.getElementById("total_ventas").value = res.total_ventas.total;
-      document.getElementById("monto_inicial").value =
-        res.inicial.monto_inicial;
-      document.getElementById("monto_general").value = res.monto_general;
-      document.getElementById("id").value = res.inicial.id;
-      document.getElementById("ocultar_campos").classList.remove("d-none");
-      document.getElementById("btnAccion").textContent = "Cerrar Caja";
-      $("#abrir_caja").modal("show");
-    }
-  };
 }

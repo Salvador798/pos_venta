@@ -93,8 +93,6 @@ document.addEventListener("DOMContentLoaded", function () {
 // Users
 window.frmUsuario = frmUsuario;
 window.registerUser = registerUser;
-arqueoCaja;
-arqueoCaja;
 window.editUser = editUser;
 window.desactiveUser = desactiveUser;
 window.activeUser = activeUser;

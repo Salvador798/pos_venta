@@ -80,6 +80,7 @@ Route::get('/arqueo', [CajaController::class, 'arqueo']);
 Route::post('/arqueo', [CajaController::class, 'openArqueo']);
 Route::get('/arqueo/listArqueo', [CajaController::class, 'listArqueo']);
 Route::get('/arqueo/getSales', [CajaController::class, 'getSales']);
+Route::get('/arqueo/debugCajas', [CajaController::class, 'debugCajas']);
 
 // Compras
 Route::get('/shopping', [ComprasController::class, 'index']);
